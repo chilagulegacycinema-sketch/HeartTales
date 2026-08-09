@@ -3,61 +3,57 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>HEARTALES - Kitabu cha Mapenzi</title>
+<title>HEARTALES - Admin Panel</title>
 <link rel="icon" href="https://i.postimg.cc/vZsmk4BF/file-00000805881f4b4bebbc524a36936.png">
 <style>
-    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Dancing+Script:wght@700&family=Cormorant+Garamond:wght@400;700&display=swap');
-    :root {--bg:#010101; --card:#F5F0E6; --border:#C0B49A; --pink-neon:#FF00F5; --purple-neon:#A100FF; --text:#2B2B2B; --book-shadow: rgba(0,0,0,0.3); --success:#00FF88; --error:#FF0040;}
+    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Dancing+Script:wght@700&display=swap');
+    :root {--bg:#010101; --card:#0A0A12; --border:#1E1E2E; --pink-neon:#FF00F5; --purple-neon:#A100FF; --text:#FFD6FF; --error:#FF0040; --success:#00FF88;}
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    html, body { height: 100%; overflow: hidden; background: var(--bg); color: var(--text); font-family: 'Cormorant Garamond', serif; display: flex; justify-content: center; }
-.app-container { width: 100%; max-width: 500px; background: #000; display: flex; flex-direction: column; height: 100%; }
+    html, body { height: 100%; overflow: hidden; background: var(--bg); color: var(--text); font-family: 'Orbitron', sans-serif; display: flex; justify-content: center; }
+.app-container { width: 100%; max-width: 500px; background: #000; border-left: 1px solid var(--border); border-right: 1px solid var(--border); display: flex; flex-direction: column; height: 100%; }
 
-.header { background: #05050A; padding: 10px 16px; border-bottom: 2px solid var(--pink-neon); display: flex; justify-content: space-between; align-items: center; flex-shrink: 0; box-shadow: 0 0 15px var(--pink-neon); }
-.logo { display: flex; align-items: center; gap: 8px; cursor: pointer; }
-.logo img { width: 35px; height: 35px; border-radius: 10px; object-fit: cover; border: 2px solid var(--pink-neon); }
-.logo h1 { font-size: 18px; font-weight: 900; font-family: 'Dancing Script', cursive; color: var(--pink-neon); }
+.header { background: #05050A; padding: 12px 16px; border-bottom: 2px solid var(--pink-neon); display: flex; justify-content: space-between; align-items: center; flex-shrink: 0; box-shadow: 0 0 15px var(--pink-neon); }
+.logo { display: flex; align-items: center; gap: 10px; cursor: pointer; }
+.logo img { width: 42px; height: 42px; border-radius: 12px; object-fit: cover; border: 2px solid var(--pink-neon); box-shadow: 0 0 15px var(--pink-neon); }
+.logo h1 { font-size: 22px; font-weight: 900; font-family: 'Dancing Script', cursive; color: var(--pink-neon); text-shadow: 0 0 8px var(--pink-neon); }
 
-.live-status { display: flex; align-items: center; gap: 5px; font-size: 9px; color: var(--success); font-weight: 900; font-family: Orbitron; padding: 3px 8px; background: rgba(0,255,136,0.1); border-radius: 10px; }
-.live-dot { width: 6px; height: 6px; background: var(--success); border-radius: 50%; animation: blink 1.5s infinite; }
-    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
+.live-status { display: flex; align-items: center; gap: 6px; font-size: 10px; color: var(--error); font-weight: 900; padding: 4px 8px; border-radius: 12px; background: rgba(255,0,64,0.1); }
+.live-dot { width: 8px; height: 8px; background: var(--error); border-radius: 50%; animation: blink 1s infinite; }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
 
-.category-bar { display: flex; gap: 5px; padding: 6px 10px; background: #05050A; justify-content: center; }
-.category-btn { padding: 3px 8px; border-radius: 12px; border: 1px solid var(--pink-neon); background: transparent; color: var(--pink-neon); font-family: Orbitron; font-weight: 700; font-size: 9px; cursor: pointer; }
-.category-btn.active { background: var(--pink-neon); color: #000; }
+.category-bar { display: flex; gap: 10px; padding: 10px 15px; background: #05050A; border-bottom: 1px solid var(--border); }
+.category-btn { flex: 1; padding: 8px; border-radius: 20px; border: 1px solid var(--pink-neon); background: transparent; color: var(--pink-neon); font-family: Orbitron; font-weight: 700; cursor: pointer; }
+.category-btn.active { background: linear-gradient(90deg, var(--pink-neon), var(--purple-neon)); color: #000; }
 
-.book-container { flex: 1; display: flex; justify-content: center; align-items: center; background: linear-gradient(to bottom, #1a1a1a, #000); perspective: 2000px; }
-.book { width: 95%; height: 90%; position: relative; transform-style: preserve-3d; }
-.page { width: 100%; height: 100%; position: absolute; background: var(--card); border: 1px solid var(--border); border-radius: 5px 15px 15px 5px; box-shadow: 0 5px 20px var(--book-shadow); padding: 25px 20px; overflow-y: auto; transform-origin: left; transition: transform 0.8s cubic-bezier(0.645, 0.045, 0.355, 1.000); background-image: linear-gradient(to right, rgba(0,0,0,0.05) 1px, transparent 1px); background-size: 20px 100%; }
-.page h2 { font-family: 'Dancing Script', cursive; font-size: 24px; color: var(--pink-neon); text-align: center; margin-bottom: 15px; }
-.page img { width: 100%; border-radius: 5px; margin-bottom: 15px; }
-.page p { font-size: 16px; line-height: 1.8; text-align: justify; }
-.page-num { position: absolute; bottom: 15px; right: 20px; font-family: Orbitron; font-size: 10px; color: #888; }
-.page-author { position: absolute; bottom: 15px; left: 20px; font-size: 10px; color: #888; display: flex; align-items: center; gap: 4px; }
+.chat-area { flex: 1; overflow-y: auto; padding: 15px; display: flex; flex-direction: column; gap: 15px; background: rgba(10,10,18,0.4); }
+.post { background: var(--card); border: 1px solid var(--pink-neon); border-radius: 15px; padding: 0; overflow: hidden; }
+.post-header { display: flex; gap: 10px; align-items: center; padding: 10px 12px; }
+.post-pfp { width: 35px; height: 35px; border-radius: 50%; object-fit: cover; border: 2px solid var(--purple-neon); }
+.post-name { font-size: 13px; font-weight: 700; color: var(--pink-neon); display: flex; align-items: center; gap: 4px; }
+.post-settings { margin-left: auto; font-size: 18px; color: #888; cursor: pointer; }
+.post-caption { font-size: 14px; line-height: 1.5; padding: 0 12px 8px 12px; }
+.post-media img { width: 100%; display: block; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+.v-badge { width: 15px; height: 15px; background: #0095F6; border-radius: 50%; display: inline-flex; justify-content: center; align-items: center; }
+.v-badge svg { width: 10px; height: 10px; fill: #fff; }
+.like-btn { padding: 10px 12px; display: flex; align-items: center; gap: 6px; color: var(--pink-neon); font-weight: 700; }
 
-.page.flipped { transform: rotateY(-180deg); }
-.page.next { z-index: 2; }
+.admin-login { display: none; flex-direction: column; padding: 30px 20px; gap: 15px; text-align: center; justify-content: center; height: 100%; }
+.admin-login img { width: 100px; height: 100px; border-radius: 20px; margin: 0 auto 10px; border: 3px solid var(--pink-neon); }
+.admin-login input { width: 100%; background: var(--card); border: 1px solid var(--pink-neon); color: #fff; padding: 14px; border-radius: 8px; font-family: 'Orbitron'; text-align: center; }
+.admin-login button { background: linear-gradient(90deg, var(--pink-neon), var(--purple-neon)); color: #000; border: none; padding: 14px; border-radius: 8px; font-weight: 900; cursor: pointer; font-family: 'Orbitron'; }
 
-.admin-login { display: none; flex-direction: column; padding: 30px 20px; gap: 15px; text-align: center; justify-content: center; height: 100%; background: #000; }
-.admin-login img { width: 80px; height: 80px; border-radius: 15px; margin: 0 auto; border: 2px solid var(--pink-neon); }
-.admin-login input { width: 100%; background: var(--card); border: 1px solid var(--pink-neon); color: #000; padding: 12px; border-radius: 8px; font-family: 'Orbitron'; text-align: center; }
-.admin-login button { background: linear-gradient(90deg, var(--pink-neon), var(--purple-neon)); color: #000; border: none; padding: 12px; border-radius: 8px; font-weight: 900; cursor: pointer; font-family: 'Orbitron'; }
-
-.profile-page { display: none; flex-direction: column; height: 100%; background: #000; }
-.profile-header { padding: 15px; text-align: center; border-bottom: 1px solid var(--border); }
-.profile-header img { width: 70px; height: 70px; border-radius: 50%; border: 2px solid var(--pink-neon); object-fit: cover; }
-.admin-tabs { display: flex; gap: 5px; padding: 8px; background: #05050A; }
-.tab-btn { flex: 1; padding: 6px; font-size: 9px; border: 1px solid var(--pink-neon); background: transparent; color: var(--pink-neon); border-radius: 8px; cursor: pointer; font-family: Orbitron; }
+.profile-page { display: none; flex-direction: column; height: 100%; }
+.profile-header { padding: 20px; text-align: center; border-bottom: 1px solid var(--border); }
+.profile-header img { width: 80px; height: 80px; border-radius: 50%; border: 3px solid var(--pink-neon); margin-bottom: 10px; object-fit: cover; }
+.admin-tabs { display: flex; gap: 5px; padding: 10px; background: #05050A; }
+.tab-btn { flex: 1; padding: 8px; font-size: 10px; border: 1px solid var(--pink-neon); background: transparent; color: var(--pink-neon); border-radius: 8px; cursor: pointer; }
 .tab-btn.active { background: var(--pink-neon); color: #000; }
-.tab-content { display: none; padding: 15px; flex-direction: column; gap: 10px; overflow-y: auto; }
+.tab-content { display: none; padding: 15px; flex-direction: column; gap: 10px; }
 .tab-content.active { display: flex; }
-.artist-input { width: 100%; background: var(--card); border: 1px solid var(--border); color: #000; padding: 10px; border-radius: 8px; font-family: 'Cormorant Garamond'; font-size: 14px; }
-.post-btn { background: linear-gradient(135deg, var(--pink-neon), var(--purple-neon)); color: #000; border: none; border-radius: 8px; padding: 10px; cursor: pointer; font-weight: 900; font-family: 'Orbitron'; font-size: 12px; }
+.artist-input { width: 100%; background: #000; border: 1px solid var(--border); color: #fff; padding: 12px; border-radius: 12px; font-family: 'Orbitron'; font-size: 14px; }
+.post-btn { background: linear-gradient(135deg, var(--pink-neon), var(--purple-neon)); color: #000; border: none; border-radius: 12px; padding: 12px; cursor: pointer; font-weight: 900; font-family: 'Orbitron'; }
 .danger-btn { background: var(--error); }
-.success-btn { background: var(--success); color: #000; }
-.book-item { background: var(--card); padding: 10px; border-radius: 8px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; }
-.book-item button { padding: 5px 8px; font-size: 9px; margin-left: 5px; }
-.v-badge { width: 12px; height: 12px; background: #0095F6; border-radius: 50%; display: inline-flex; justify-content: center; align-items: center; }
-.v-badge svg { width: 8px; height: 8px; fill: #fff; }
+.success-btn { background: var(--success); }
 </style>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
@@ -66,67 +62,76 @@
 <div id="mainApp" class="app-container">
     <div class="header">
         <div class="logo" id="logoClick">
-            <img src="https://i.postimg.cc/vZsmk4BF/file-00000805881f4b4bebbc524a36936.png">
-            <h1>HEART<span style="color:var(--purple-neon);">TALES</span></h1>
+            <img src="https://i.postimg.cc/vZsmk4BF/file-00000805881f4b4bebbc524a36936.png" alt="Logo">
+            <h1>HEART<span>TALES</span></h1>
         </div>
         <div class="live-status"><div class="live-dot"></div><span id="liveCount">0 ONLINE</span></div>
     </div>
 
     <div class="category-bar" id="categoryBar">
-        <button class="category-btn active" onclick="loadBooks('all')">ZOTE</button>
-        <button class="category-btn" onclick="loadBooks('Love')">Love</button>
-        <button class="category-btn" onclick="loadBooks('Inspiration')">Inspiration</button>
+        <button class="category-btn active" onclick="filterCat('all')">ZOTE</button>
+        <button class="category-btn" onclick="filterCat('Love')">❤️ Love</button>
+        <button class="category-btn" onclick="filterCat('Inspiration')">✨ Inspiration</button>
     </div>
 
-    <div id="bookView" class="book-container">
-        <div class="book" id="book">
-            <p style="color:#888; text-align:center; padding-top:50px;">Bofya category kuchagua kitabu cha kusoma</p>
-        </div>
+    <div id="channelView" style="display:flex;">
+        <div class="chat-area" id="chatBox"></div>
     </div>
 
     <div id="adminLogin" class="admin-login">
-        <img src="https://i.postimg.cc/vZsmk4BF/file-00000805881f4b4bebbc524a36936.png">
+        <img src="https://i.postimg.cc/vZsmk4BF/file-00000000805881f4b4bebbc524a36936.png">
         <h2 style="color:var(--pink-neon); font-family: Dancing Script;">ADMIN LOGIN</h2>
         <input type="text" id="adminName" placeholder="Jina la Admin: YStar Pro">
-        <input type="text" id="adminPfp" placeholder="Link ya Picha yako ya Profile">
-        <input type="password" id="adminPass" placeholder="Weka Password">
+        <input type="text" id="adminPfp" placeholder="Link ya Picha yako">
+        <input type="password" id="adminPass" placeholder="Password">
         <button onclick="loginAdmin()">INGIA ADMIN</button>
-        <button onclick="backToBook()" style="background:#555;">RUDI</button>
+        <button onclick="backToChannel()" style="background:#555;">RUDI</button>
     </div>
 
     <div id="profilePage" class="profile-page">
         <div class="profile-header">
-            <button class="post-btn" onclick="backToBook()" style="background:#555; margin-bottom:10px; width:100%;">RUDI KWENYE VITABU</button>
-            <img id="profilePagePfp" src=""><h2 id="profilePageName" style="color:var(--pink-neon);"></h2>
+            <button class="post-btn" onclick="backToChannel()" style="background:#555; margin-bottom:10px;">← RUDI HOME</button>
+            <img id="profilePagePfp" src="">
+            <h2 id="profilePageName"></h2>
+            <button class="post-btn danger-btn" onclick="logout()">TOKA ADMIN</button>
         </div>
+        
         <div class="admin-tabs">
-            <button class="tab-btn active" onclick="openTab('postTab')">ANDIKA</button>
-            <button class="tab-btn" onclick="openTab('manageTab')">SIMAMIA</button>
+            <button class="tab-btn active" onclick="openTab('postTab')">POST</button>
+            <button class="tab-btn" onclick="openTab('manageTab')">MANAGE</button>
             <button class="tab-btn" onclick="openTab('settingsTab')">SETTINGS</button>
             <button class="tab-btn" onclick="openTab('moneyTab')">MALIPO</button>
         </div>
+
         <div id="postTab" class="tab-content active">
-            <h3 style="color:var(--pink-neon);">ANDIKA KITABU KIPYA</h3>
-            <input type="text" id="bookTitle" class="artist-input" placeholder="Jina la Kitabu">
-            <select id="bookCategory" class="artist-input"><option value="Love">Love</option><option value="Inspiration">Inspiration</option></select>
-            <textarea id="bookContent" class="artist-input" placeholder="Andika hapa. Tumia [PAGE] kutenganisha ukurasa mpya" rows="8"></textarea>
-            <input type="text" id="bookCover" class="artist-input" placeholder="Link ya Cover ya Kitabu">
-            <button class="post-btn" onclick="publishBook()">CHAPISHA</button>
+            <h3 style="color:var(--pink-neon);">POST STORY MPYA</h3>
+            <input type="text" id="postTitle" class="artist-input" placeholder="Title ya Story">
+            <select id="postCategory" class="artist-input"><option value="Love">❤️ Love</option><option value="Inspiration">✨ Inspiration</option></select>
+            <textarea id="postCaption" class="artist-input" placeholder="Andika Story yako..." rows="4"></textarea>
+            <input type="text" id="postImage" class="artist-input" placeholder="Link ya Picha ya Cover">
+            <input type="text" id="postVideo" class="artist-input" placeholder="Link ya Video Tear - Hiari">
+            <button class="post-btn" onclick="sendPost()">POST SASA</button>
         </div>
-        <div id="manageTab" class="tab-content"><h3 style="color:var(--pink-neon);">SIMAMIA VITABU VYAKO</h3><div id="myBooksList"></div></div>
+
+        <div id="manageTab" class="tab-content">
+            <h3 style="color:var(--pink-neon);">POST ZANGU</h3>
+            <div class="chat-area" id="profilePosts" style="padding:0;"></div>
+        </div>
+
         <div id="settingsTab" class="tab-content">
-            <h3 style="color:var(--pink-neon);">BADILI TAARIFA</h3>
+            <h3 style="color:var(--pink-neon);">BADILI TAARIFA ZAKO</h3>
             <input type="text" id="newAdminName" class="artist-input" placeholder="Jina Jipya la Admin">
             <input type="text" id="newAdminPfp" class="artist-input" placeholder="Link Jipya ya Picha">
             <input type="password" id="newAdminPass" class="artist-input" placeholder="Password Mpya">
             <button class="post-btn success-btn" onclick="updateAdminInfo()">HIFADHI MABADILIKO</button>
-            <button class="post-btn danger-btn" onclick="logout()">TOKA ADMIN</button>
         </div>
+
         <div id="moneyTab" class="tab-content">
             <h3 style="color:var(--pink-neon);">MIPANGILIO YA MALIPO</h3>
+            <p style="font-size:12px; color:#888;">Hapa baadae utaweka: Google AdSense, M-Pesa, TigoPesa</p>
             <input type="text" id="adsenseCode" class="artist-input" placeholder="Weka AdSense Code yako">
-            <input type="text" id="mpesaNumber" class="artist-input" placeholder="Namba ya M-Pesa / TigoPesa">
-            <button class="post-btn success-btn" onclick="savePayment()">HIFADHI</button>
+            <input type="text" id="mpesaNumber" class="artist-input" placeholder="Namba ya M-Pesa">
+            <button class="post-btn success-btn" onclick="savePayment()">HIFADHI MIPANGILIO</button>
         </div>
     </div>
 </div>
@@ -136,118 +141,91 @@
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
 
-    let currentUser = ""; let currentPfp = ""; let isAdmin = false; let clickCount = 0; let adminPass = "ystar123"; 
-    let currentBookPages = []; let currentPageIndex = 0; let userId = 'user_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
-    let editingBookId = null;
+    let currentUser = ""; let currentPfp = ""; let isAdmin = false; let clickCount = 0; let currentCategory = "all"; let adminPass = "ystar123";
 
-    // ===== SYSTEM YA ONLINE =====
-    function setupOnlineStatus() {
-        let userRef = db.ref("hearttales_online/" + userId);
-        let connectedRef = db.ref(".info/connected");
-        connectedRef.on("value", (snap) => { if (snap.val() === true) { userRef.set(true); userRef.onDisconnect().remove(); } });
-        db.ref("hearttales_online").on("value", (snap) => { document.getElementById('liveCount').innerText = snap.numChildren() + " ONLINE"; });
-    }
+    document.getElementById('logoClick').addEventListener('click', () => {
+        clickCount++; if(clickCount >= 5) { clickCount = 0; document.getElementById('channelView').style.display = 'none'; document.getElementById('adminLogin').style.display = 'flex'; }
+    });
 
-    // ===== ADMIN SECRET =====
-    document.getElementById('logoClick').addEventListener('click', () => { clickCount++; if(clickCount >= 5) { clickCount = 0; bookView.style.display = 'none'; adminLogin.style.display = 'flex'; } });
-
-    function loginAdmin() { 
-        let name = adminName.value.trim(); let pfp = adminPfp.value.trim(); let pass = adminPass.value.trim(); 
-        if(pass !== adminPass) { alert("Password sio sahihi"); return; } 
-        if(!name || !pfp) { alert("Jaza jina na picha"); return; } 
-        currentUser = name; currentPfp = pfp; isAdmin = true; 
+    function loginAdmin() {
+        let name = document.getElementById('adminName').value.trim(); let pfp = document.getElementById('adminPfp').value.trim(); let pass = document.getElementById('adminPass').value.trim();
+        if(pass !== adminPass) { alert("Password sio sahihi"); return; } if(!name || !pfp) { alert("Jaza jina na picha"); return; }
+        currentUser = name; currentPfp = pfp; isAdmin = true;
         localStorage.setItem('heartAdmin', name); localStorage.setItem('heartPfp', pfp); localStorage.setItem('heartPass', pass);
-        enterAdmin(); 
-    }
-    function enterAdmin() { 
-        adminLogin.style.display = 'none'; profilePage.style.display = 'flex'; categoryBar.style.display = 'none'; 
-        profilePagePfp.src = currentPfp; profilePageName.innerHTML = currentUser + ' <span class="v-badge"><svg viewBox="0 0 24 24"><path d="M12 2L3 5l9 19 9-19-9-3z"/></svg></span>';
-        newAdminName.value = currentUser; newAdminPfp.value = currentPfp; newAdminPass.value = adminPass;
-        loadMyBooks(); loadPaymentSettings();
-    }
-    function backToBook() { adminLogin.style.display = 'none'; profilePage.style.display = 'none'; bookView.style.display = 'flex'; categoryBar.style.display = 'flex'; }
-    function openTab(tabId) { document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active')); document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active')); document.getElementById(tabId).classList.add('active'); event.target.classList.add('active'); }
-    function logout() { db.ref("hearttales_online/" + userId).remove(); localStorage.clear(); location.reload(); }
-
-    // ===== KUCHAPISHA NA KUSIMAMIA VITABU =====
-    function publishBook() {
-        if(!isAdmin) return;
-        let pages = bookContent.value.split('[PAGE]');
-        let data = {title: bookTitle.value, category: bookCategory.value, author: currentUser, authorPfp: currentPfp, cover: bookCover.value, pages: pages, timestamp: Date.now()};
-        if(editingBookId) { db.ref("hearttales_books/" + editingBookId).update(data); alert("Kitabu kimehaririwa"); editingBookId = null; }
-        else { db.ref("hearttales_books").push().set(data); alert("Kitabu kimechapishwa"); }
-        document.querySelectorAll('.artist-input').forEach(i => i.value = "");
-        loadMyBooks();
+        enterAdmin();
     }
 
-    function loadBooks(category) {
-        document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active')); event.target.classList.add('active');
-        book.innerHTML = "Inapakia vitabu..."; 
-        let query = category === 'all' ? db.ref("hearttales_books").limitToLast(5) : db.ref("hearttales_books").orderByChild("category").equalTo(category).limitToLast(5);
-        query.once("value", snap => { 
-            book.innerHTML = "";
-            if(!snap.exists()) { book.innerHTML = "<p style='color:#888;text-align:center;padding-top:50px;'>Hakuna vitabu kwenye category hii</p>"; return; }
-            snap.forEach(child => { let bookData = child.val(); bookData.id = child.key; let div = document.createElement('div'); div.className = 'book-cover'; div.style.cssText = "width:90%;height:120px;background:#222;border:1px solid var(--pink-neon);margin:10px auto;border-radius:8px;padding:10px;cursor:pointer;text-align:center;color:var(--pink-neon)"; div.innerHTML = `<b>${bookData.title}</b><br><small>Na: ${bookData.author}</small>`; div.onclick = () => renderBook(bookData); book.appendChild(div); });
-        });
+    function enterAdmin() {
+        document.getElementById('adminLogin').style.display = 'none'; document.getElementById('categoryBar').style.display = 'none';
+        document.getElementById('profilePage').style.display = 'flex';
+        document.getElementById('profilePagePfp').src = currentPfp;
+        document.getElementById('profilePageName').innerHTML = currentUser + ' <span class="v-badge"><svg viewBox="0 0 24 24"><path d="M12 2L3 5l9 19 9-19-9-3z"/></svg></span>';
+        document.getElementById('newAdminName').value = currentUser; document.getElementById('newAdminPfp').value = currentPfp;
+        loadMyPosts(); loadSettings();
     }
 
-    function renderBook(bookData) {
-        book.innerHTML = "";
-        currentBookPages = bookData.pages;
-        currentBookPages.forEach((pageContent, index) => {
-            let pageDiv = document.createElement('div');
-            pageDiv.className = 'page';
-            pageDiv.id = 'page-' + index;
-            if(index > 0) pageDiv.style.zIndex = 100 - index;
-            pageDiv.innerHTML = `
-                ${index === 0 && bookData.cover ? `<img src="${bookData.cover}">` : ""}
-                <h2>${bookData.title}</h2>
-                <p>${pageContent}</p>
-                <div class="page-author"><img src="${bookData.authorPfp}" style="width:15px;height:15px;border-radius:50%;"> ${bookData.author} <span class="v-badge"><svg viewBox="0 0 24 24"><path d="M12 2L3 5l9 19 9-19-9-3z"/></svg></span></div>
-                <div class="page-num">Ukurasa ${index + 1} / ${currentBookPages.length}</div>
-            `;
-            pageDiv.addEventListener('click', () => flipPage(index));
-            book.appendChild(pageDiv);
-        });
+    function backToChannel() {
+        document.getElementById('adminLogin').style.display = 'none'; document.getElementById('profilePage').style.display = 'none';
+        document.getElementById('categoryBar').style.display = 'flex'; document.getElementById('channelView').style.display = 'flex';
     }
 
-    function flipPage(index) {
-        let page = document.getElementById('page-' + index);
-        if(page && !page.classList.contains('flipped')) {
-            page.classList.add('flipped');
-            page.style.zIndex = 200 + index;
-        } else if(page) {
-            page.classList.remove('flipped');
-            page.style.zIndex = 100 - index;
+    function openTab(tabId) {
+        document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        document.getElementById(tabId).classList.add('active'); event.target.classList.add('active');
+    }
+
+    function logout() { localStorage.clear(); location.reload(); }
+
+    function sendPost() {
+        let data = {sender: currentUser, pfp: currentPfp, title: postTitle.value, category: postCategory.value, caption: postCaption.value, image: postImage.value, video: postVideo.value, timestamp: Date.now(), likes: 0};
+        db.ref("hearttales_stories").push().set(data); alert("Imetumwa!"); document.querySelectorAll('.artist-input').forEach(i => i.value = "");
+    }
+
+    function renderPost(key, data) {
+        if(document.getElementById("post-" + key)) return; if(currentCategory !== "all" && data.category !== currentCategory) return;
+        let badge = '<span class="v-badge"><svg viewBox="0 0 24 24"><path d="M12 2L3 5l9 19 9-19-9-3z"/></svg></span>';
+        let media = data.image ? `<img src="${data.image}">` : ""; if(data.video) media += `<iframe src="${data.video}"></iframe>`;
+        let settingsBtn = isAdmin ? `<div class="post-settings" onclick="postOptions('${key}')">⋮</div>` : "";
+        document.getElementById('chatBox').innerHTML += `<div class="post" id="post-${key}"><div class="post-header"><img class="post-pfp" src="${data.pfp}"><div><div class="post-name">${data.sender}${badge}</div></div>${settingsBtn}</div><div class="post-caption"><b>${data.title}</b><br>${data.caption}</div><div class="post-media">${media}</div><div class="like-btn">❤️ Like (${data.likes || 0})</div></div>`;
+    }
+
+    function renderMyPost(key, data) {
+        if(document.getElementById("my-post-" + key)) return;
+        let media = data.image ? `<img src="${data.image}">` : "";
+        document.getElementById('profilePosts').innerHTML += `<div class="post" id="my-post-${key}"><div class="post-header"><img class="post-pfp" src="${data.pfp}"><div><div class="post-name">${data.title}</div></div><div class="post-settings" onclick="postOptions('${key}')">⋮</div></div><div class="post-caption">${data.caption}</div><div class="post-media">${media}</div></div>`;
+    }
+
+    function postOptions(key) {
+        let action = prompt("Chagua:\n1. Futa Post\n2. Hariri Post");
+        if(action == "1") { if(confirm("Futa kweli?")) db.ref("hearttales_stories/" + key).remove(); }
+        if(action == "2") {
+            let newTitle = prompt("Title mpya:"); let newCap = prompt("Maelezo mapya:"); let newImg = prompt("Link ya picha mpya:");
+            if(newTitle) db.ref("hearttales_stories/" + key).update({title: newTitle, caption: newCap, image: newImg});
         }
     }
 
-    function loadMyBooks() { 
-        myBooksList.innerHTML = "Inapakia...";
-        db.ref("hearttales_books").orderByChild("author").equalTo(currentUser).once("value", snap => {
-            myBooksList.innerHTML = "";
-            snap.forEach(child => {
-                let data = child.val();
-                myBooksList.innerHTML += `<div class="book-item"><span>${data.title}</span><div><button class="post-btn" onclick="editBook('${child.key}')">Hariri</button><button class="post-btn danger-btn" onclick="deleteBook('${child.key}')">Futa</button></div></div>`;
-            });
-        });
-    }
-    function editBook(id) { db.ref("hearttales_books/" + id).once("value", snap => { let data = snap.val(); editingBookId = id; bookTitle.value = data.title; bookCategory.value = data.category; bookContent.value = data.pages.join('[PAGE]'); bookCover.value = data.cover; openTab('postTab'); }); }
-    function deleteBook(id) { if(confirm("Una uhakika kufuta kitabu hiki?")) db.ref("hearttales_books/" + id).remove().then(() => loadMyBooks()); }
-
-    function updateAdminInfo() { 
-        let newName = newAdminName.value; let newPfp = newAdminPfp.value; let newPass = newAdminPass.value; 
-        if(newName) currentUser = newName; if(newPfp) currentPfp = newPfp; if(newPass) adminPass = newPass; 
+    function updateAdminInfo() {
+        let newName = document.getElementById('newAdminName').value; let newPfp = document.getElementById('newAdminPfp').value; let newPass = document.getElementById('newAdminPass').value;
+        if(newName) currentUser = newName; if(newPfp) currentPfp = newPfp; if(newPass) adminPass = newPass;
         localStorage.setItem('heartAdmin', currentUser); localStorage.setItem('heartPfp', currentPfp); localStorage.setItem('heartPass', adminPass);
-        profilePageName.innerHTML = currentUser + ' <span class="v-badge"><svg viewBox="0 0 24 24"><path d="M12 2L3 5l9 19 9-19-9-3z"/></svg></span>'; profilePagePfp.src = currentPfp; alert("Mabadiliko yamehifadhiwa"); 
+        document.getElementById('profilePageName').innerHTML = currentUser + ' <span class="v-badge"><svg viewBox="0 0 24 24"><path d="M12 2L3 5l9 19 9-19-9-3z"/></svg></span>';
+        document.getElementById('profilePagePfp').src = currentPfp; alert("Mabadiliko yamehifadhiwa!");
     }
-    function savePayment() { let ads = adsenseCode.value; let mpesa = mpesaNumber.value; db.ref("hearttales_settings/payment").set({adsense: ads, mpesa: mpesa}); alert("Mipangilio ya malipo imehifadhiwa"); }
-    function loadPaymentSettings() { db.ref("hearttales_settings/payment").once("value", snap => { let d = snap.val(); if(d){ adsenseCode.value = d.adsense || ""; mpesaNumber.value = d.mpesa || ""; } }); }
 
-    // ANZA APP
-    setupOnlineStatus();
-    loadBooks('all');
+    function savePayment() { let ads = adsenseCode.value; let mpesa = mpesaNumber.value; db.ref("hearttales_settings/payment").set({adsense: ads, mpesa: mpesa}); alert("Mipangilio ya malipo imehifadhiwa"); }
+    function loadSettings() { db.ref("hearttales_settings/payment").once("value", snap => { let d = snap.val(); if(d){ adsenseCode.value = d.adsense || ""; mpesaNumber.value = d.mpesa || ""; } }); }
+
+    function likePost(key) { db.ref("hearttales_stories/" + key + "/likes").transaction(likes => (likes || 0) + 1); }
+    function filterCat(cat) { currentCategory = cat; document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active')); event.target.classList.add('active'); listenToChannel(); }
+    
+    function listenToChannel() { document.getElementById('chatBox').innerHTML = ""; db.ref("hearttales_stories").limitToLast(30).on("child_added", snap => renderPost(snap.key, snap.val())); db.ref("hearttales_stories").on("child_removed", snap => { let el = document.getElementById("post-" + snap.key); if(el) el.remove(); }); }
+    function loadMyPosts() { document.getElementById('profilePosts').innerHTML = ""; db.ref("hearttales_stories").orderByChild("sender").equalTo(currentUser).on("child_added", snap => renderMyPost(snap.key, snap.val())); }
+    function listenToOnlineCount() { db.ref("online").on("value", snap => { document.getElementById('liveCount').innerText = snap.numChildren() + " ONLINE"; }); }
+
+    // Anza
+    listenToChannel(); listenToOnlineCount();
     if(localStorage.getItem('heartAdmin')) { currentUser = localStorage.getItem('heartAdmin'); currentPfp = localStorage.getItem('heartPfp'); adminPass = localStorage.getItem('heartPass') || "ystar123"; isAdmin = true; enterAdmin(); }
 </script>
 </body>
-</html>
+    </html>
