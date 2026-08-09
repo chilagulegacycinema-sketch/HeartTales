@@ -2,15 +2,15 @@
 <html lang="sw">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>HEARTALES - Kitabu cha Mapenzi</title>
 <link rel="icon" href="https://i.postimg.cc/vZsmk4BF/file-00000805881f4b4bebbc524a36936.png">
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Dancing+Script:wght@700&family=Cormorant+Garamond:wght@400;700&display=swap');
     :root {--bg:#010101; --card:#F5F0E6; --border:#C0B49A; --pink-neon:#FF00F5; --purple-neon:#A100FF; --text:#2B2B2B; --book-shadow: rgba(0,0,0,0.3); --success:#00FF88;}
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    html, body { height: 100%; overflow: hidden; background: var(--bg); color: var(--text); font-family: 'Cormorant Garamond', serif; display: flex; justify-content: center; }
-.app-container { width: 100%; max-width: 500px; background: #000; display: flex; flex-direction: column; height: 100%; }
+    html, body { height: 100%; width: 100%; overflow: hidden; background: var(--bg); color: var(--text); font-family: 'Cormorant Garamond', serif; }
+.app-container { width: 100vw; height: 100vh; background: #000; display: flex; flex-direction: column; }
 .header { background: #05050A; padding: 10px 16px; border-bottom: 2px solid var(--pink-neon); display: flex; justify-content: space-between; align-items: center; flex-shrink: 0; box-shadow: 0 0 15px var(--pink-neon); }
 .logo { display: flex; align-items: center; gap: 8px; cursor: pointer; }
 .logo img { width: 35px; height: 35px; border-radius: 10px; object-fit: cover; border: 2px solid var(--pink-neon); }
@@ -18,24 +18,24 @@
 .live-status { display: flex; align-items: center; gap: 5px; font-size: 9px; color: var(--success); font-weight: 900; font-family: Orbitron; padding: 3px 8px; background: rgba(0,255,136,0.1); border-radius: 10px; }
 .live-dot { width: 6px; height: 6px; background: var(--success); border-radius: 50%; animation: blink 1.5s infinite; }
 @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
-.category-bar { display: flex; gap: 6px; padding: 8px 10px; background: #05050A; justify-content: center; }
-.category-btn { display: flex; align-items: center; gap: 4px; padding: 4px 10px; border-radius: 15px; border: 1px solid var(--pink-neon); background: transparent; color: var(--pink-neon); font-family: Orbitron; font-weight: 700; font-size: 10px; cursor: pointer; }
+.category-bar { display: flex; gap: 5px; padding: 6px 10px; background: #05050A; justify-content: center; }
+.category-btn { display: flex; align-items: center; gap: 4px; padding: 3px 8px; border-radius: 12px; border: 1px solid var(--pink-neon); background: transparent; color: var(--pink-neon); font-family: Orbitron; font-weight: 700; font-size: 9px; cursor: pointer; }
 .category-btn.active { background: var(--pink-neon); color: #000; }
-.category-btn svg { width: 12px; height: 12px; fill: currentColor; }
+.category-btn svg { width: 10px; height: 10px; fill: currentColor; }
 .book-container { flex: 1; display: flex; justify-content: center; align-items: center; background: linear-gradient(to bottom, #1a1a1a, #000); perspective: 2000px; }
-.book { width: 95%; height: 90%; position: relative; transform-style: preserve-3d; }
-.page { width: 100%; height: 100%; position: absolute; background: var(--card); border: 1px solid var(--border); border-radius: 5px 15px 15px 5px; box-shadow: 0 5px 20px var(--book-shadow); padding: 25px 20px; overflow-y: auto; transform-origin: left; transition: transform 0.8s ease; background-image: linear-gradient(to right, rgba(0,0,0,0.05) 1px, transparent 1px); background-size: 20px 100%; }
+.book { width: 100%; height: 100%; position: relative; transform-style: preserve-3d; }
+.page { width: 100%; height: 100%; position: absolute; background: var(--card); border: none; border-radius: 0; box-shadow: none; padding: 25px 20px; overflow-y: auto; transform-origin: left; transition: transform 0.8s ease; background-image: linear-gradient(to right, rgba(0,0,0,0.05) 1px, transparent 1px); background-size: 20px 100%; }
 .page h2 { font-family: 'Dancing Script', cursive; font-size: 24px; color: var(--pink-neon); text-align: center; margin-bottom: 15px; }
 .page img { width: 100%; border-radius: 5px; margin-bottom: 15px; }
 .page p { font-size: 16px; line-height: 1.8; text-align: justify; }
 .page-num { position: absolute; bottom: 15px; right: 20px; font-family: Orbitron; font-size: 10px; color: #888; }
 .page.flipped { transform: rotateY(-180deg); }
 .page.next { z-index: 2; }
-.admin-login { display: none; flex-direction: column; padding: 30px 20px; gap: 15px; text-align: center; justify-content: center; height: 100%; background: #000; }
+.admin-login { display: none; flex-direction: column; padding: 30px 20px; gap: 15px; text-align: center; justify-content: center; height: 100%; width: 100%; background: #000; }
 .admin-login img { width: 80px; height: 80px; border-radius: 15px; margin: 0 auto; border: 2px solid var(--pink-neon); }
 .admin-login input { width: 100%; background: var(--card); border: 1px solid var(--pink-neon); color: #000; padding: 12px; border-radius: 8px; font-family: 'Orbitron'; text-align: center; }
 .admin-login button { display: flex; align-items: center; justify-content: center; gap: 5px; background: linear-gradient(90deg, var(--pink-neon), var(--purple-neon)); color: #000; border: none; padding: 12px; border-radius: 8px; font-weight: 900; cursor: pointer; font-family: 'Orbitron'; }
-.profile-page { display: none; flex-direction: column; height: 100%; background: #000; }
+.profile-page { display: none; flex-direction: column; height: 100%; width: 100%; background: #000; }
 .profile-header { padding: 15px; text-align: center; border-bottom: 1px solid var(--border); }
 .profile-header img { width: 70px; height: 70px; border-radius: 50%; border: 2px solid var(--pink-neon); }
 .admin-tabs { display: flex; gap: 5px; padding: 8px; background: #05050A; }
@@ -47,6 +47,7 @@
 .artist-input { width: 100%; background: var(--card); border: 1px solid var(--border); color: #000; padding: 10px; border-radius: 8px; font-family: 'Cormorant Garamond'; font-size: 14px; }
 .post-btn { display: flex; align-items: center; justify-content: center; gap: 5px; background: linear-gradient(135deg, var(--pink-neon), var(--purple-neon)); color: #000; border: none; border-radius: 8px; padding: 10px; cursor: pointer; font-weight: 900; font-family: 'Orbitron'; }
 .icon { width: 12px; height: 12px; fill: currentColor; }
+.book-cover { width:95%;height:120px;background:#222;border:1px solid var(--pink-neon);margin:10px auto;border-radius:8px;padding:10px;cursor:pointer;text-align:center;color:var(--pink-neon); display:flex; flex-direction:column; justify-content:center; }
 </style>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
@@ -119,24 +120,13 @@
     const db = firebase.database();
 
     let currentUser = ""; let currentPfp = ""; let isAdmin = false; let clickCount = 0; let correctAdminPass = "ystar123"; let currentBookPages = []; let currentPageIndex = 0;
-    let userId = 'user_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9); // ID ya kipekee kwa kila mtu
+    let userId = 'user_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
 
-    // ===== SYSTEM MPYA YA ONLINE KWELI =====
     function setupOnlineStatus() {
         let userRef = db.ref("hearttales_online/" + userId);
         let connectedRef = db.ref(".info/connected");
-        
-        connectedRef.on("value", (snap) => {
-            if (snap.val() === true) {
-                userRef.set(true); // Weka mtu online
-                userRef.onDisconnect().remove(); // Akifunga app ajitoe
-            }
-        });
-
-        // Hesabu watu wote walio online
-        db.ref("hearttales_online").on("value", (snap) => {
-            document.getElementById('liveCount').innerText = snap.numChildren() + " ONLINE";
-        });
+        connectedRef.on("value", (snap) => { if (snap.val() === true) { userRef.set(true); userRef.onDisconnect().remove(); } });
+        db.ref("hearttales_online").on("value", (snap) => { document.getElementById('liveCount').innerText = snap.numChildren() + " ONLINE"; });
     }
 
     document.getElementById('logoClick').addEventListener('click', () => { clickCount++; if(clickCount >= 5) { clickCount = 0; document.getElementById('bookView').style.display = 'none'; document.getElementById('adminLogin').style.display = 'flex'; } });
@@ -184,15 +174,17 @@
     function loadBook(category) {
         document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active')); event.target.classList.add('active');
         document.getElementById('book').innerHTML = "Inapakia..."; 
-        let query = category === 'all' ? db.ref("hearttales_books").limitToLast(1) : db.ref("hearttales_books").orderByChild("category").equalTo(category).limitToLast(1);
+        let query = category === 'all' ? db.ref("hearttales_books").limitToLast(5) : db.ref("hearttales_books").orderByChild("category").equalTo(category).limitToLast(5);
         query.once("value", snap => { 
             document.getElementById('book').innerHTML = "";
-            snap.forEach(child => { let bookData = child.val(); currentBookPages = bookData.pages; renderBook(bookData); });
+            if(!snap.exists()) { document.getElementById('book').innerHTML = "<p style='color:#888;text-align:center;padding-top:50px;'>Hakuna vitabu bado</p>"; return; }
+            snap.forEach(child => { let bookData = child.val(); bookData.id = child.key; let div = document.createElement('div'); div.className = 'book-cover'; div.innerHTML = `<b>${bookData.title}</b><br><small>Na: ${bookData.author}</small>`; div.onclick = () => renderBook(bookData); document.getElementById('book').appendChild(div); });
         });
     }
 
     function renderBook(bookData) {
         document.getElementById('book').innerHTML = "";
+        currentBookPages = bookData.pages;
         currentBookPages.forEach((pageContent, index) => {
             let pageDiv = document.createElement('div');
             pageDiv.className = 'page';
@@ -223,8 +215,7 @@
     function loadMyBooks() { document.getElementById('myBooksList').innerHTML = "<p>Hakuna vitabu bado</p>"; }
     function updateAdminInfo() { alert("Imehifadhiwa"); }
 
-    // ANZA APP
-    setupOnlineStatus(); // Anzisha kuhesabu watu
+    setupOnlineStatus();
     loadBook('all');
 </script>
 </body>
