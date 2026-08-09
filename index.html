@@ -1,168 +1,189 @@
 <!DOCTYPE html>
-<html lang="sw">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>INEVITABLE - FILM SYSTEM</title>
-<link rel="icon" href="https://i.postimg.cc/vZsmk4BF/file-00000805881f4b4bebbc524a36936.png">
+<title>INEVITABLE - THE GAME</title>
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap');
-    :root {
-        --bg:#010101; --card:#0A0A12; --border:#1E1E2E;
-        --blue-neon:#00F0FF; --pink-neon:#FF00F5; --green-neon:#00FF88; --text:#E0E0FF;
-    }
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { background: var(--bg); color: var(--text); font-family: 'Orbitron', sans-serif; height: 100vh; display: flex; justify-content: center; overflow: hidden; }
+    :root { --bg:#000; --red:#FF0040; --text:#E0E0E0; --glitch:#00F0FF; }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body { background:var(--bg); color:var(--text); font-family:'Orbitron'; height:100vh; display:flex; justify-content:center; align-items:center; overflow:hidden; }
 
-    .app-container { width: 100%; max-width: 500px; background: #000; border: 1px solid var(--border); display: flex; flex-direction: column; height: 100vh; }
+    .screen { width:100%; max-width:500px; text-align:center; padding:20px; }
+
+    .setup h1 { color:var(--red); font-size:32px; text-shadow:0 0 15px var(--red); animation:glitch 2s infinite; letter-spacing:3px; }
+    @keyframes glitch { 0%,100%{text-shadow:0 0 10px var(--red);} 50%{text-shadow:2px 0 var(--glitch), -2px 0 var(--red);} }
+
+    .warning { background:rgba(255,0,64,0.1); border:2px solid var(--red); padding:15px; margin:20px 0; border-radius:8px; font-size:11px; line-height:1.6; }
+    .warning strong { color:var(--red); }
+
+    .player-inputs input { width:100%; background:#111; border:1px solid var(--red); color:#fff; padding:14px; margin:8px 0; border-radius:5px; font-family:Orbitron; text-align:center; font-size:14px; }
+    .player-inputs input:focus { outline:none; box-shadow:0 0 10px var(--red); }
     
-    .header { background: #05050A; padding: 12px 16px; border-bottom: 2px solid var(--pink-neon); display: flex; justify-content: space-between; align-items: center; }
-    .logo h1 { font-size: 18px; font-weight: 900; color: var(--pink-neon); text-shadow: 0 0 8px var(--pink-neon); }
-    .scene-count { font-size:11px; color:var(--green-neon); border:1px solid var(--green-neon); padding:4px 10px; border-radius:4px; }
+    .start-btn { width:100%; background:var(--red); color:#000; border:none; padding:16px; font-weight:900; font-size:18px; cursor:pointer; margin-top:15px; letter-spacing:2px; }
+    .start-btn:disabled { background:#333; color:#666; cursor:not-allowed; }
 
-    .top-tabs { display:flex; background:#05050A; }
-    .tab-btn { flex:1; padding:10px; background:transparent; border:none; color:var(--blue-neon); font-weight:900; cursor:pointer; font-size:10px; font-family:Orbitron; }
-    .tab-btn.active { background:var(--pink-neon); color:#000; }
+    .game-screen { display:none; }
+    .players-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin:20px 0; }
+    .player-card { background:#111; border:2px solid #333; padding:18px; border-radius:8px; transition:0.6s; font-weight:700; }
+    .player-card.scanned { border-color:var(--red); background:rgba(255,0,64,0.3); box-shadow:0 0 20px var(--red); animation:shake 0.5s; }
+    .player-card.eliminated { opacity:0; transform:scale(0) rotate(180deg); }
+    @keyframes shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-6px)} 75%{transform:translateX(6px)} }
 
-    .tab-content { display:none; flex:1; flex-direction:column; padding:15px; overflow-y:auto; }
-    .tab-content.active { display:flex; }
+    .scanner { font-size:20px; color:var(--red); margin:15px 0; letter-spacing:2px; }
+    .timer { font-size:50px; color:var(--glitch); font-weight:900; text-shadow:0 0 15px var(--glitch); }
+    .shoot-btn { background:var(--red); color:#000; border:none; padding:22px; font-size:20px; font-weight:900; width:100%; cursor:pointer; display:none; letter-spacing:3px; margin-top:20px; }
+    .shoot-btn:hover { box-shadow:0 0 30px var(--red); }
 
-    /* CAST TAB */
-    .actor-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
-    .actor-card { background:var(--card); border:1px solid var(--border); padding:15px; border-radius:8px; text-align:center; cursor:pointer; }
-    .actor-card.active { border-color:var(--pink-neon); box-shadow:0 0 10px var(--pink-neon); }
-    .actor-card img { width:60px; height:60px; border-radius:50%; border:2px solid var(--blue-neon); margin-bottom:5px; }
-
-    /* SCRIPT TAB */
-    .scene-box { background:var(--card); border-left:3px solid var(--pink-neon); padding:15px; margin-bottom:10px; border-radius:5px; }
-    .scene-title { color:var(--blue-neon); font-weight:900; margin-bottom:5px; }
-    .dialogue { font-size:14px; line-height:1.8; }
-    .choice-btn { width:100%; background:linear-gradient(90deg, var(--blue-neon), var(--pink-neon)); color:#000; border:none; padding:12px; margin-top:8px; border-radius:6px; font-weight:900; cursor:pointer; }
-    .shot-btn { background:var(--green-neon); margin-top:10px; }
-    .shot-btn.shot { background:#555; }
-
-    /* LOG TAB */
-    .log-item { background:#111; padding:10px; border-radius:6px; margin-bottom:8px; font-size:12px; }
-    .log-item.done { border-left:3px solid var(--green-neon); }
+    .red-flash { position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(255,0,64,0.5); pointer-events:none; display:none; z-index:9999; }
 </style>
-<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 </head>
 <body>
 
-<div class="app-container">
-    <div class="header">
-        <div class="logo"><h1>INEVITABLE <span style="color:var(--blue-neon)">FILM</span></h1></div>
-        <div class="scene-count" id="progress">0/12 SCENES</div>
-    </div>
+<div class="red-flash" id="redFlash"></div>
 
-    <div class="top-tabs">
-        <button class="tab-btn active" onclick="openTab('castTab')">👥 CAST</button>
-        <button class="tab-btn" onclick="openTab('scriptTab')">🎬 SCRIPT</button>
-        <button class="tab-btn" onclick="openTab('logTab')">📋 SHOTS LOG</button>
+<!-- SCREEN 1: SETUP -->
+<div class="screen setup" id="setupScreen">
+    <h1>INEVITABLE</h1>
+    <div class="warning">
+        <strong>RULES:</strong><br>
+        1. PLAYERS MUST BE EXACTLY 7<br>
+        2. ONCE THE GAME STARTS, THERE IS NO ESCAPE<br>
+        3. THIS IS A SIMULATION FOR FILM PURPOSES ONLY
+        <br><br>
+        <small>Kumbuka: Hii ni system ya kupiga film tu. Hakuna mtu anayepotea kweli</small>
     </div>
-
-    <!-- TAB 1: CAST -->
-    <div id="castTab" class="tab-content active">
-        <h3 style="color:var(--pink-neon); margin-bottom:10px;">CHAGUA MHUSIKA MKUU</h3>
-        <div class="actor-grid">
-            <div class="actor-card" onclick="selectActor('ZORAVALY', this)"><img src="https://i.postimg.cc/vZsmk4BF/file-00000805881f4b4bebbc524a36936.png"><div>ZORAVALY</div></div>
-            <div class="actor-card" onclick="selectActor('PAUL', this)"><img src="https://i.postimg.cc/vZsmk4BF/file-00000805881f4b4bebbc524a36936.png"><div>PAUL</div></div>
-            <div class="actor-card" onclick="selectActor('SHANIYA', this)"><img src="https://i.postimg.cc/vZsmk4BF/file-00000805881f4b4bebbc524a36936.png"><div>SHANIYA</div></div>
-            <div class="actor-card" onclick="selectActor('IRENE', this)"><img src="https://i.postimg.cc/vZsmk4BF/file-00000805881f4b4bebbc524a36936.png"><div>IRENE</div></div>
-        </div>
-    </div>
-
-    <!-- TAB 2: SCRIPT -->
-    <div id="scriptTab" class="tab-content">
-        <div id="scenesContainer"></div>
-    </div>
-
-    <!-- TAB 3: LOG -->
-    <div id="logTab" class="tab-content">
-        <h3 style="color:var(--pink-neon); margin-bottom:10px;">MAENDELEO YA KUPIGA</h3>
-        <div id="shotLog"></div>
-    </div>
+    <p style="margin-bottom:10px;">ENTER 7 PLAYER NAMES</p>
+    <div class="player-inputs" id="playerInputs"></div>
+    <button class="start-btn" id="startBtn" onclick="startGame()" disabled>INITIATE GAME</button>
 </div>
 
+<!-- SCREEN 2: GAME -->
+<div class="screen game-screen" id="gameScreen">
+    <h2 style="color:var(--red); letter-spacing:2px;">THE GAME HAS BEGUN</h2>
+    <div class="scanner" id="scannerText">SCANNING TARGET...</div>
+    <div class="timer" id="timer">15</div>
+    <div class="players-grid" id="playersGrid"></div>
+    <button class="shoot-btn" id="shootBtn" onclick="shootPlayer()">ELIMINATE TARGET</button>
+</div>
+
+<!-- AUDIO FILES -->
+<audio id="scanSound" src="https://freesound.org/data/previews/270/270404_5123851-lq.mp3" preload="auto"></audio>
+<audio id="alarmSound" src="https://freesound.org/data/previews/456/456588_9498993-lq.mp3" preload="auto"></audio>
+<audio id="heartbeat" src="https://freesound.org/data/previews/244/244563_4301841-lq.mp3" preload="auto" loop></audio>
+<audio id="elimSound" src="https://freesound.org/data/previews/320/320181_5260872-lq.mp3" preload="auto"></audio>
+
 <script>
-    const firebaseConfig = { databaseURL: "https://chilx-live-4432d-default-rtdb.firebaseio.com/" };
-    firebase.initializeApp(firebaseConfig);
-    const db = firebase.database();
+    const requiredPlayers = ["ZORAVALY","PAUL","SHANIYA","WILLIAMS","IRENE","MASON","PAUL2"];
+    let players = [];
+    let currentScanIndex = 0;
+    let scanInterval;
+    let countdown = 15;
 
-    let selectedActor = "";
-    let shotScenes = [];
-    const totalScenes = 12;
+    const scanSound = document.getElementById('scanSound');
+    const alarmSound = document.getElementById('alarmSound');
+    const heartbeat = document.getElementById('heartbeat');
+    const elimSound = document.getElementById('elimSound');
+    const redFlash = document.getElementById('redFlash');
 
-    const scenes = [
-        {id:1, title:"SCENE 1: MKUTANO WA USIKU", dialogue:"ZORAVALY: Nimechoka na maisha haya. PAUL: Basi njoo na mimi.", choices:["Kubali kwenda","Kataa"]},
-        {id:2, title:"SCENE 2: NYUMBA YA SIRI", dialogue:"SHANIYA: Hapa ndipo tulipoficha pesa. IRENE: Polisi wanakuja!", choices:["Ficha pesa","Kimbia"]},
-        {id:3, title:"SCENE 3: MAUAZI", dialogue:"ZORAVALY: Huu ndio mwisho wetu. PAUL: Hapana, bado tuna tumaini.", choices:["Pigana","Jisalimisha"]},
-        // Ongeza mpaka scene 12 hapa
-    ];
-
-    function openTab(tabId){
-        document.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('active'));
-        document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
-        document.getElementById(tabId).classList.add('active');
-        event.target.classList.add('active');
-        if(tabId === 'scriptTab') loadScenes();
-        if(tabId === 'logTab') loadLog();
+    // Tengeneza input 7
+    const inputsDiv = document.getElementById('playerInputs');
+    for(let i=0; i<7; i++){
+        inputsDiv.innerHTML += `<input type="text" id="p${i}" placeholder="PLAYER ${i+1}" oninput="checkInputs()">`;
     }
 
-    function selectActor(name, el){
-        selectedActor = name;
-        document.querySelectorAll('.actor-card').forEach(c=>c.classList.remove('active'));
-        el.classList.add('active');
-        alert(`MHUSIKA MKUU: ${name} AMECHAGULIWA`);
-    }
-
-    function loadScenes(){
-        let container = document.getElementById('scenesContainer');
-        container.innerHTML = "";
-        scenes.forEach(scene=>{
-            let isShot = shotScenes.includes(scene.id);
-            container.innerHTML += `
-                <div class="scene-box">
-                    <div class="scene-title">${scene.title}</div>
-                    <div class="dialogue">${scene.dialogue}</div>
-                    <button class="choice-btn" onclick="alert('Choice: ${scene.choices[0]}')">A: ${scene.choices[0]}</button>
-                    <button class="choice-btn" onclick="alert('Choice: ${scene.choices[1]}')">B: ${scene.choices[1]}</button>
-                    <button class="choice-btn shot-btn ${isShot?'shot':''}" onclick="markShot(${scene.id}, this)">
-                        ${isShot ? '✓ SHOT IMEPIGWA' : 'MARK AS SHOT'}
-                    </button>
-                </div>
-            `;
-        });
-    }
-
-    function markShot(id, btn){
-        if(!shotScenes.includes(id)){
-            shotScenes.push(id);
-            db.ref("inevitable_shots").push({scene:id, actor:selectedActor, time:Date.now()});
-        } else {
-            shotScenes = shotScenes.filter(s=>s!==id);
+    function checkInputs(){
+        let filled = 0;
+        for(let i=0; i<7; i++){
+            if(document.getElementById('p'+i).value.trim()!== "") filled++;
         }
-        btn.classList.toggle('shot');
-        btn.innerText = shotScenes.includes(id) ? '✓ SHOT IMEPIGWA' : 'MARK AS SHOT';
-        document.getElementById('progress').innerText = `${shotScenes.length}/${totalScenes} SCENES`;
+        document.getElementById('startBtn').disabled = filled!== 7;
     }
 
-    function loadLog(){
-        let log = document.getElementById('shotLog');
-        log.innerHTML = "";
-        shotScenes.forEach(id=>{
-            let s = scenes.find(x=>x.id===id);
-            log.innerHTML += `<div class="log-item done">✓ ${s.title} - Mhusika: ${selectedActor}</div>`;
+    function startGame(){
+        players = [];
+        for(let i=0; i<7; i++){
+            players.push({name: document.getElementById('p'+i).value.toUpperCase(), alive:true});
+        }
+
+        document.getElementById('setupScreen').style.display = 'none';
+        document.getElementById('gameScreen').style.display = 'block';
+
+        heartbeat.play(); // Anza moyo kupiga
+        renderPlayers();
+        startScanning();
+    }
+
+    function renderPlayers(){
+        let grid = document.getElementById('playersGrid');
+        grid.innerHTML = "";
+        players.forEach((p,i)=>{
+            if(p.alive){
+                grid.innerHTML += `<div class="player-card" id="player${i}">${p.name}</div>`;
+            }
         });
-        if(shotScenes.length===0) log.innerHTML = "<p style='color:#888'>Bado hujapiga scene yoyote</p>";
     }
 
-    // Load shot progress from Firebase
-    db.ref("inevitable_shots").once("value", snap=>{
-        snap.forEach(child=> shotScenes.push(child.val().scene));
-        document.getElementById('progress').innerText = `${shotScenes.length}/${totalScenes} SCENES`;
-    });
+    function flashRed(){
+        redFlash.style.display = 'block';
+        setTimeout(()=> redFlash.style.display = 'none', 200);
+    }
+
+    function startScanning(){
+        scanInterval = setInterval(()=>{
+            flashRed();
+            scanSound.currentTime = 0;
+            scanSound.play();
+
+            if(currentScanIndex > 0){
+                let prev = document.getElementById('player'+(currentScanIndex-1));
+                if(prev) prev.classList.remove('scanned');
+            }
+
+            if(currentScanIndex < players.length){
+                let current = document.getElementById('player'+currentScanIndex);
+                if(current) current.classList.add('scanned');
+                document.getElementById('scannerText').innerText = `SCANNING: ${players[currentScanIndex].name}`;
+                currentScanIndex++;
+                resetTimer();
+            } else {
+                clearInterval(scanInterval);
+                heartbeat.pause();
+                alarmSound.play();
+                document.getElementById('scannerText').innerText = "GAME ACTIVE - SELECT TARGET";
+                document.getElementById('shootBtn').style.display = 'block';
+            }
+        }, 15000); // kila sekunde 15
+        runTimer();
+    }
+
+    function runTimer(){
+        countdown = 15;
+        document.getElementById('timer').innerText = countdown;
+        let t = setInterval(()=>{
+            countdown--;
+            document.getElementById('timer').innerText = countdown;
+            if(countdown <= 0) clearInterval(t);
+        }, 1000);
+    }
+    function resetTimer(){ runTimer(); }
+
+    function shootPlayer(){
+        let alivePlayers = players.filter(p=>p.alive);
+        if(alivePlayers.length > 0){
+            let target = alivePlayers[0]; // unabadilisha manually ukiwa unashoot
+            let index = players.findIndex(p=>p.name === target.name);
+            players[index].alive = false;
+            
+            elimSound.play();
+            flashRed();
+            document.getElementById('player'+index).classList.add('eliminated');
+            
+            setTimeout(()=>renderPlayers(), 600);
+            alert(`TARGET ELIMINATED: ${target.name}`);
+        }
+    }
 </script>
 </body>
 </html>
