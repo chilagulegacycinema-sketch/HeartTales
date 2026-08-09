@@ -26,22 +26,20 @@
    .start-btn:disabled { background:#333; color:#666; cursor:not-allowed; }
 
    .game-screen { display:none; }
-   .players-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin:20px 0; min-height:300px; }
-   .player-card { background:#111; border:2px solid #333; padding:18px; border-radius:8px; transition:0.6s; font-weight:700; position:relative; }
-   .player-card.scanned { border-color:var(--red); background:rgba(255,0,64,0.3); box-shadow:0 0 20px var(--red); animation:shake 0.5s; }
+   .players-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin:20px 0; min-height:320px; }
+   .player-card { background:#111; border:2px solid #333; padding:18px; border-radius:8px; transition:0.8s; font-weight:700; position:relative; height:80px; display:flex; align-items:center; justify-content:center; }
+   .player-card.scanning { border-color:var(--red); background:rgba(255,0,64,0.3); box-shadow:0 0 25px var(--red); animation:shake 0.3s infinite; }
    .player-card.dead { background:var(--red); border-color:var(--red); }
-   .player-card.winner { background:var(--blue); border-color:var(--blue); box-shadow:0 0 20px var(--blue); }
-   .player-card.name { font-size:14px; }
-   .player-card.status { position:absolute; bottom:5px; right:8px; font-size:10px; font-weight:900; }
-    @keyframes shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-6px)} 75%{transform:translateX(6px)} }
+   .player-card.winner { background:var(--blue); border-color:var(--blue); box-shadow:0 0 25px var(--blue); }
+   .player-card.name { font-size:14px; letter-spacing:1px; }
+   .player-card.status { position:absolute; bottom:5px; right:8px; font-size:11px; font-weight:900; }
+    @keyframes shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-4px)} 75%{transform:translateX(4px)} }
 
-   .scanner { font-size:20px; color:var(--red); margin:15px 0; letter-spacing:2px; }
-   .timer { font-size:50px; color:var(--glitch); font-weight:900; text-shadow:0 0 15px var(--glitch); }
-   .shoot-btn { background:var(--red); color:#000; border:none; padding:22px; font-size:20px; font-weight:900; width:100%; cursor:pointer; display:none; letter-spacing:3px; margin-top:20px; }
-   .shoot-btn:hover { box-shadow:0 0 30px var(--red); }
+   .scanner { font-size:18px; color:var(--red); margin:15px 0; letter-spacing:3px; }
+   .timer { font-size:45px; color:var(--glitch); font-weight:900; text-shadow:0 0 15px var(--glitch); }
+   .game-over { display:none; font-size:30px; color:var(--red); margin:20px 0; letter-spacing:4px; animation:glitch 1s infinite; }
 
-   .red-flash { position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(255,0,64,0.5); pointer-events:none; display:none; z-index:9999; }
-   .game-over { display:none; font-size:28px; color:var(--red); margin:20px 0; letter-spacing:3px; }
+   .red-flash { position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(255,0,64,0.6); pointer-events:none; display:none; z-index:9999; }
 </style>
 </head>
 <body>
@@ -55,13 +53,13 @@
         <strong>RULES:</strong><br>
         1. PLAYERS MUST BE EXACTLY 7<br>
         2. ONCE THE GAME STARTS, THERE IS NO ESCAPE<br>
-        3. THE GAME CHOOSES. THE GAME ELIMINATES.
+        3. THE GAME WILL CHOOSE AND ELIMINATE AUTOMATICALLY
 
         <span class="sw">
         <strong>SHERIA:</strong><br>
-        1. Wachezaji lazima wawe 7. Sio 6, sio 8. Lazima 7.<br>
-        2. Game ikianza hakuna kurudi nyuma.<br>
-        3. Game ndiyo itachagua. Game ndiyo itaondoa.
+        1. Wachezaji lazima wawe 7. Lazima 7.<br>
+        2. Game ikianza hakuna mtu anayeidhibiti.<br>
+        3. Game yenyewe itachagua na kutoa mmoja mmoja.
         </span>
     </div>
     <p style="margin-bottom:10px; letter-spacing:1px;">ENTER 7 PLAYER NAMES</p>
@@ -72,11 +70,10 @@
 <!-- SCREEN 2: GAME -->
 <div class="screen game-screen" id="gameScreen">
     <h2 style="color:var(--red); letter-spacing:2px;">THE GAME HAS BEGUN</h2>
-    <div class="scanner" id="scannerText">SCANNING TARGET...</div>
+    <div class="scanner" id="scannerText">INITIALIZING...</div>
     <div class="timer" id="timer">15</div>
     <div class="players-grid" id="playersGrid"></div>
     <div class="game-over" id="gameOverText">GAME OVER</div>
-    <button class="shoot-btn" id="shootBtn" onclick="shootPlayer()">ELIMINATE TARGET</button>
 </div>
 
 <!-- AUDIO FILES -->
@@ -84,14 +81,13 @@
 <audio id="alarmSound" src="https://freesound.org/data/previews/456/456588_9498993-lq.mp3" preload="auto"></audio>
 <audio id="heartbeat" src="https://freesound.org/data/previews/244/244563_4301841-lq.mp3" preload="auto" loop></audio>
 <audio id="elimSound" src="https://freesound.org/data/previews/320/320181_5260872-lq.mp3" preload="auto"></audio>
-<audio id="gameOverSound" src="https://freesound.org/data/previews/270/270404_5123851-lq.mp3" preload="auto"></audio>
 
 <script>
     let players = [];
     let currentScanIndex = 0;
-    let scanInterval;
-    let countdown = 15;
-    let gamePhase = 'scanning'; // scanning, shooting, ended
+    let eliminationIndex = 0;
+    let gamePhase = 'scan'; // scan, eliminate, ended
+    let timerInterval;
 
     const scanSound = document.getElementById('scanSound');
     const alarmSound = document.getElementById('alarmSound');
@@ -124,7 +120,7 @@
 
         heartbeat.play();
         renderPlayers();
-        startScanning();
+        startGameProcess();
     }
 
     function renderPlayers(){
@@ -135,7 +131,7 @@
             let className = "player-card";
             if(!p.alive) { className += " dead"; status = "X"; }
             if(p.winner) { className += " winner"; status = "WINNER"; }
-            if(p.scanned && p.alive) className += " scanned";
+            if(p.scanning) className += " scanning";
 
             grid.innerHTML += `
                 <div class="${className}" id="player${i}">
@@ -148,69 +144,75 @@
 
     function flashRed(){
         redFlash.style.display = 'block';
-        setTimeout(()=> redFlash.style.display = 'none', 200);
+        setTimeout(()=> redFlash.style.display = 'none', 300);
     }
 
-    function startScanning(){
-        scanInterval = setInterval(()=>{
-            flashRed();
-            scanSound.currentTime = 0;
-            scanSound.play();
-
+    function startGameProcess(){
+        // PHASE 1: SCAN ALL PLAYERS - kila sek 15
+        let scanTimer = setInterval(()=>{
             if(currentScanIndex < players.length){
-                players[currentScanIndex].scanned = true;
+                players.forEach(p=> p.scanning = false);
+                players[currentScanIndex].scanning = true;
+
+                flashRed();
+                scanSound.currentTime = 0;
+                scanSound.play();
+
                 document.getElementById('scannerText').innerText = `SCANNING: ${players[currentScanIndex].name}`;
                 currentScanIndex++;
                 renderPlayers();
                 resetTimer();
             } else {
-                clearInterval(scanInterval);
+                clearInterval(scanTimer);
                 heartbeat.pause();
                 alarmSound.play();
-                gamePhase = 'shooting';
-                document.getElementById('scannerText').innerText = "GAME ACTIVE - SELECT TARGET";
-                document.getElementById('shootBtn').style.display = 'block';
+                document.getElementById('scannerText').innerText = "ELIMINATION PHASE";
+                startElimination();
             }
         }, 15000);
         runTimer();
     }
 
+    // PHASE 2: AUTO ELIMINATE - kila sek 5 inatoa mtu
+    function startElimination(){
+        let elimTimer = setInterval(()=>{
+            let alive = players.filter(p=>p.alive);
+            if(alive.length > 2){
+                let target = alive[0];
+                let index = players.findIndex(p=>p.name === target.name);
+                players[index].alive = false;
+
+                elimSound.play();
+                flashRed();
+                renderPlayers();
+
+                if(players.filter(p=>p.alive).length <= 2){
+                    clearInterval(elimTimer);
+                    endGame();
+                }
+            }
+        }, 5000); // kila sekunde 5 inatoa mtu
+    }
+
     function runTimer(){
-        countdown = 15;
-        document.getElementById('timer').innerText = countdown;
-        let t = setInterval(()=>{
-            countdown--;
-            document.getElementById('timer').innerText = countdown;
-            if(countdown <= 0) clearInterval(t);
+        let count = 15;
+        document.getElementById('timer').innerText = count;
+        clearInterval(timerInterval);
+        timerInterval = setInterval(()=>{
+            count--;
+            document.getElementById('timer').innerText = count;
+            if(count <= 0) clearInterval(timerInterval);
         }, 1000);
     }
     function resetTimer(){ runTimer(); }
 
-    function shootPlayer(){
-        let alivePlayers = players.filter(p=>p.alive);
-        if(alivePlayers.length > 2){ // Acha watu 2 waishi
-            let target = alivePlayers[0];
-            let index = players.findIndex(p=>p.name === target.name);
-            players[index].alive = false;
-
-            elimSound.play();
-            flashRed();
-            renderPlayers();
-
-            if(players.filter(p=>p.alive).length <= 2){
-                endGame();
-            }
-        }
-    }
-
     function endGame(){
         gamePhase = 'ended';
-        document.getElementById('shootBtn').style.display = 'none';
         document.getElementById('scannerText').style.display = 'none';
         document.getElementById('timer').style.display = 'none';
         document.getElementById('gameOverText').style.display = 'block';
 
-        // Weka winner PLAYER 1 na PLAYER 3
+        // PLAYER 1 na PLAYER 3 ndio washindi
         players[0].winner = true;
         players[2].winner = true;
         renderPlayers();
