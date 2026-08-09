@@ -28,43 +28,18 @@
 .category-btn svg { width: 10px; height: 10px; fill: currentColor; }
 .book-container { flex: 1; display: flex; justify-content: center; align-items: center; background: linear-gradient(to bottom, #1a1a1a, #000); perspective: 2000px; overflow-y: auto; }
 .book { width: 100%; height: 100%; position: relative; transform-style: preserve-3d; }
-
-    /* AUTHOR HEADER JUU YA KITABU */
-.author-header {
-    display: flex; align-items: center; gap: 8px;
-    padding: 10px 15px; background: #111; border-bottom: 1px solid #333;
-    position: sticky; top: 0; z-index: 1000;
-}
+.author-header { display: flex; align-items: center; gap: 8px; padding: 10px 15px; background: #111; border-bottom: 1px solid #333; position: sticky; top: 0; z-index: 1000; }
 .author-header img { width: 30px; height: 30px; border-radius: 50%; border: 1px solid var(--pink-neon); }
 .author-header.name { font-family: Orbitron; font-size: 11px; color: var(--pink-neon); font-weight: 700; }
-.author-header.v { width: 10px; height: 10px; background: #0095F6; border-radius: 50%; display: inline-flex; }
+.author-header.v { width: 10px; height: 10px; background: #0095F6; border-radius: 50%; display: inline-flex; justify-content:center; align-items:center; }
 .author-header.v svg { width: 7px; height: 7px; fill: #fff; }
-
-.page {
-    width: 100%; height: 100%; position: absolute;
-    background: var(--read-bg); color: var(--read-text);
-    border: none; border-radius: 0; box-shadow: none;
-    padding: 0; overflow-y: auto; transform-origin: left;
-    transition: transform 0.8s ease; background-image: none;
-}
+.page { width: 100%; height: 100%; position: absolute; background: var(--read-bg); color: var(--read-text); border: none; border-radius: 0; box-shadow: none; padding: 0; overflow-y: auto; transform-origin: left; transition: transform 0.8s ease; background-image: none; }
 .page-content { padding: 20px 25px 30px 25px; }
 .page h2 { font-family: 'Dancing Script', cursive; font-size: 26px; color: var(--pink-neon); text-align: center; margin-bottom: 20px; border-bottom: 1px solid #333; padding-bottom: 10px; }
 .page p { font-size: 17px; line-height: 2; text-align: justify; }
 .page-num { position: absolute; bottom: 15px; right: 20px; font-family: Orbitron; font-size: 10px; color: #666; }
-
-    /* COVER 2.35:1 WIDESCREEN */
-.book-cover-page {
-    width: 100%; background: var(--read-bg);
-    display: flex; flex-direction: column; justify-content: center; align-items: center;
-    padding: 15px;
-}
-.book-cover-page.cover-img {
-    width: 100%; aspect-ratio: 2.35 / 1; /* HII HAPA 2.35:1 */
-    object-fit: cover; border-radius: 8px;
-    box-shadow: 0 0 20px rgba(255,0,245,0.2);
-    border: 1px solid #333; margin-bottom: 15px;
-}
-
+.book-cover-page { width: 100%; background: var(--read-bg); display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 15px; }
+.book-cover-page.cover-img { width: 100%; aspect-ratio: 2.35 / 1; object-fit: cover; border-radius: 8px; box-shadow: 0 0 20px rgba(255,0,245,0.2); border: 1px solid #333; margin-bottom: 15px; }
 .page.flipped { transform: rotateY(-180deg); }
 .admin-login { display: none; flex-direction: column; padding: 30px 20px; gap: 15px; text-align: center; justify-content: center; height: 100%; width: 100%; background: #000; }
 .admin-login img { width: 80px; height: 80px; border-radius: 15px; margin: 0 auto; border: 2px solid var(--pink-neon); }
@@ -194,7 +169,7 @@
         document.getElementById('profilePage').style.display = 'none';
         document.getElementById('bookView').style.display = 'flex';
         document.getElementById('categoryBar').style.display = 'flex';
-        loadBook('all');
+        loadBook('all'); // HOME INAONYESHA ZOTE
     }
     function openTab(tabId) {
         document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
@@ -216,14 +191,34 @@
         });
     }
 
+    // ===== HUYU NDIO UMEBADILISHWA =====
     function loadBook(category) {
         document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active')); event.target.classList.add('active');
         document.getElementById('book').innerHTML = "Inapakia...";
-        let query = category === 'all'? db.ref("hearttales_books").orderByChild("timestamp").limitToLast(20) : db.ref("hearttales_books").orderByChild("category").equalTo(category).limitToLast(20);
+
+        // IKIWA NI ALL, LETA ZOTE. IKIWA NI CATEGORY, FILTER
+        let query;
+        if(category === 'all') {
+            query = db.ref("hearttales_books").orderByChild("timestamp").limitToLast(50);
+        } else {
+            query = db.ref("hearttales_books").orderByChild("category").equalTo(category).limitToLast(50);
+        }
+
         query.once("value", snap => {
             document.getElementById('book').innerHTML = "";
             if(!snap.exists()) { document.getElementById('book').innerHTML = "<p style='color:#888;text-align:center;padding-top:50px;'>Hakuna vitabu bado. Kuwa wa kwanza kuchapisha!</p>"; return; }
-            snap.forEach(child => { let bookData = child.val(); bookData.id = child.key; let div = document.createElement('div'); div.className = 'book-cover'; div.innerHTML = `<b>${bookData.title}</b><br><small>Na: ${bookData.author}</small>`; div.onclick = () => renderBook(bookData); document.getElementById('book').appendChild(div); });
+
+            let booksArray = [];
+            snap.forEach(child => { booksArray.push({id: child.key,...child.val()}); });
+            booksArray.reverse(); // Zipange mpya ziwe juu
+
+            booksArray.forEach(bookData => {
+                let div = document.createElement('div');
+                div.className = 'book-cover';
+                div.innerHTML = `<b>${bookData.title}</b><br><small>Na: ${bookData.author} | ${bookData.category}</small>`;
+                div.onclick = () => renderBook(bookData);
+                document.getElementById('book').appendChild(div);
+            });
         });
     }
 
@@ -236,7 +231,6 @@
             pageDiv.id = 'page-' + index;
             if(index > 0) pageDiv.style.zIndex = 100 - index;
 
-            // AUTHOR HEADER + COVER 2.35:1
             let authorHeader = `
                 <div class="author-header">
                     <img src="${bookData.authorPfp}">
@@ -287,7 +281,6 @@
             if(!snap.exists()) { document.getElementById('myBooksList').innerHTML = "<p>Hujachapisha kitabu bado</p>"; return; }
             snap.forEach(child => {
                 let data = child.val();
-                // IMEONGEZWA BUTTON YA KUFUTA
                 document.getElementById('myBooksList').innerHTML += `
                     <div class="book-item-admin">
                         <div><b>${data.title}</b><br><small>${data.category}</small></div>
@@ -303,15 +296,14 @@
         if(confirm("Una uhakika unataka kufuta kitabu hiki?")) {
             db.ref("hearttales_books/" + id).remove().then(() => {
                 alert("Kitabu kimefutwa");
-                loadMyBooks();
-                loadBook('all');
+                loadMyBooks(); loadBook('all');
             });
         }
     }
     function updateAdminInfo() { alert("Imehifadhiwa"); }
 
     setupOnlineStatus();
-    loadBook('all');
+    loadBook('all'); // ANZA NA ZOTE MOJA KWA MOJA
 </script>
 </body>
 </html>
