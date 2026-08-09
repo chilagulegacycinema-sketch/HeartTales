@@ -61,6 +61,7 @@
 .book-cover { width:95%;height:120px;background:#222;border:1px solid var(--pink-neon);margin:10px auto;border-radius:8px;padding:10px;cursor:pointer;text-align:center;color:var(--pink-neon); display:flex; flex-direction:column; justify-content:center; }
 .book-cover:hover { background: #333; }
 .book-item-admin { background:#222; padding:10px; border-radius:8px; display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; }
+.empty-state { color:#888; text-align:center; padding-top:50px; font-size:14px; }
 </style>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
@@ -76,14 +77,14 @@
     </div>
 
     <div class="category-bar" id="categoryBar">
-        <button class="category-btn active" onclick="loadBook('all')"><svg viewBox="0 0 24 24"><path d="M4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm16-4H8c-1.1 0-2.9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-1 9H9V9h10v2zm-4 4H9v-2h6v2zm4-8H9V5h10v2z"/></svg> ZOTE</button>
-        <button class="category-btn" onclick="loadBook('Love')"><svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg> LOVE</button>
-        <button class="category-btn" onclick="loadBook('Inspiration')"><svg viewBox="0 0 24 24"><path d="M9 21c0.55.45 1 1 1h4c.55 0 1-.45 1-1v-1H9v1zm3-19C8.14 2 5 5.14 5 9c0 2.38 1.19 4.47 3 5.74V17c0.55.45 1 1 1h6c.55 0 1-.45 1-1v-2.26c1.81-1.27 3-3.36 3-5.74 0-3.86-3.14-7-7-7z"/></svg> INSPO</button>
+        <button class="category-btn active" id="btnAll" onclick="loadBook('all')"><svg viewBox="0 0 24 24"><path d="M4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm16-4H8c-1.1 0-2.9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-1 9H9V9h10v2zm-4 4H9v-2h6v2zm4-8H9V5h10v2z"/></svg> ZOTE</button>
+        <button class="category-btn" id="btnLove" onclick="loadBook('Love')"><svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg> LOVE</button>
+        <button class="category-btn" id="btnInspo" onclick="loadBook('Inspiration')"><svg viewBox="0 0 24 24"><path d="M9 21c0.55.45 1 1 1h4c.55 0 1-.45 1-1v-1H9v1zm3-19C8.14 2 5 5.14 5 9c0 2.38 1.19 4.47 3 5.74V17c0.55.45 1 1 1h6c.55 0 1-.45 1-1v-2.26c1.81-1.27 3-3.36 3-5.74 0-3.86-3.14-7-7-7z"/></svg> INSPO</button>
     </div>
 
     <div id="bookView" class="book-container">
         <div class="book" id="book">
-            <p style="color:#888; text-align:center; padding-top:50px;">Inapakia vitabu...</p>
+            <p class="empty-state">Inapakia vitabu...</p>
         </div>
     </div>
 
@@ -169,7 +170,7 @@
         document.getElementById('profilePage').style.display = 'none';
         document.getElementById('bookView').style.display = 'flex';
         document.getElementById('categoryBar').style.display = 'flex';
-        loadBook('all'); // HOME INAONYESHA ZOTE
+        loadBook('all');
     }
     function openTab(tabId) {
         document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
@@ -191,12 +192,18 @@
         });
     }
 
-    // ===== HUYU NDIO UMEBADILISHWA =====
-    function loadBook(category) {
-        document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active')); event.target.classList.add('active');
-        document.getElementById('book').innerHTML = "Inapakia...";
+    // ===== FIX KUU: HAITEGEMEI EVENT.TARGET TENA =====
+    function setActiveCategory(category) {
+        document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
+        if(category === 'all') document.getElementById('btnAll').classList.add('active');
+        if(category === 'Love') document.getElementById('btnLove').classList.add('active');
+        if(category === 'Inspiration') document.getElementById('btnInspo').classList.add('active');
+    }
 
-        // IKIWA NI ALL, LETA ZOTE. IKIWA NI CATEGORY, FILTER
+    function loadBook(category) {
+        setActiveCategory(category);
+        document.getElementById('book').innerHTML = "<p class='empty-state'>Inapakia vitabu...</p>";
+
         let query;
         if(category === 'all') {
             query = db.ref("hearttales_books").orderByChild("timestamp").limitToLast(50);
@@ -206,11 +213,14 @@
 
         query.once("value", snap => {
             document.getElementById('book').innerHTML = "";
-            if(!snap.exists()) { document.getElementById('book').innerHTML = "<p style='color:#888;text-align:center;padding-top:50px;'>Hakuna vitabu bado. Kuwa wa kwanza kuchapisha!</p>"; return; }
+            if(!snap.exists()) {
+                document.getElementById('book').innerHTML = "<p class='empty-state'>Hakuna vitabu bado hapa.</p>";
+                return;
+            }
 
             let booksArray = [];
             snap.forEach(child => { booksArray.push({id: child.key,...child.val()}); });
-            booksArray.reverse(); // Zipange mpya ziwe juu
+            booksArray.reverse();
 
             booksArray.forEach(bookData => {
                 let div = document.createElement('div');
@@ -302,8 +312,9 @@
     }
     function updateAdminInfo() { alert("Imehifadhiwa"); }
 
+    // ANZA APP HAPA HAPA
     setupOnlineStatus();
-    loadBook('all'); // ANZA NA ZOTE MOJA KWA MOJA
+    loadBook('all'); // HII NDIO INAFUNGUA NA VITABU MOJA KWA MOJA
 </script>
 </body>
 </html>
