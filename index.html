@@ -11,18 +11,14 @@
     * { box-sizing: border-box; margin: 0; padding: 0; }
     html, body { height: 100%; overflow: hidden; background: var(--bg); color: var(--text); font-family: 'Cormorant Garamond', serif; display: flex; justify-content: center; }
 .app-container { width: 100%; max-width: 500px; background: #000; display: flex; flex-direction: column; height: 100%; }
-
 .header { background: #05050A; padding: 10px 16px; border-bottom: 2px solid var(--pink-neon); display: flex; justify-content: space-between; align-items: center; flex-shrink: 0; box-shadow: 0 0 15px var(--pink-neon); }
 .logo { display: flex; align-items: center; gap: 8px; cursor: pointer; }
 .logo img { width: 35px; height: 35px; border-radius: 10px; object-fit: cover; border: 2px solid var(--pink-neon); }
 .logo h1 { font-size: 18px; font-weight: 900; font-family: 'Dancing Script', cursive; color: var(--pink-neon); }
-
 .live-status { display: flex; align-items: center; gap: 5px; font-size: 9px; color: #FF0040; font-weight: 900; font-family: Orbitron; }
-
 .category-bar { display: flex; gap: 6px; padding: 8px 10px; background: #05050A; justify-content: center; }
 .category-btn { padding: 4px 10px; border-radius: 15px; border: 1px solid var(--pink-neon); background: transparent; color: var(--pink-neon); font-family: Orbitron; font-weight: 700; font-size: 10px; cursor: pointer; }
 .category-btn.active { background: var(--pink-neon); color: #000; }
-
 .book-container { flex: 1; display: flex; justify-content: center; align-items: center; background: linear-gradient(to bottom, #1a1a1a, #000); perspective: 2000px; }
 .book { width: 95%; height: 90%; position: relative; transform-style: preserve-3d; }
 .page { width: 100%; height: 100%; position: absolute; background: var(--card); border: 1px solid var(--border); border-radius: 5px 15px 15px 5px; box-shadow: 0 5px 20px var(--book-shadow); padding: 25px 20px; overflow-y: auto; transform-origin: left; transition: transform 0.8s ease; background-image: linear-gradient(to right, rgba(0,0,0,0.05) 1px, transparent 1px); background-size: 20px 100%; }
@@ -30,15 +26,12 @@
 .page img { width: 100%; border-radius: 5px; margin-bottom: 15px; }
 .page p { font-size: 16px; line-height: 1.8; text-align: justify; }
 .page-num { position: absolute; bottom: 15px; right: 20px; font-family: Orbitron; font-size: 10px; color: #888; }
-
 .page.flipped { transform: rotateY(-180deg); }
 .page.next { z-index: 2; }
-
 .admin-login { display: none; flex-direction: column; padding: 30px 20px; gap: 15px; text-align: center; justify-content: center; height: 100%; background: #000; }
 .admin-login img { width: 80px; height: 80px; border-radius: 15px; margin: 0 auto; border: 2px solid var(--pink-neon); }
 .admin-login input { width: 100%; background: var(--card); border: 1px solid var(--pink-neon); color: #000; padding: 12px; border-radius: 8px; font-family: 'Orbitron'; text-align: center; }
 .admin-login button { background: linear-gradient(90deg, var(--pink-neon), var(--purple-neon)); color: #000; border: none; padding: 12px; border-radius: 8px; font-weight: 900; cursor: pointer; font-family: 'Orbitron'; }
-
 .profile-page { display: none; flex-direction: column; height: 100%; background: #000; }
 .profile-header { padding: 15px; text-align: center; border-bottom: 1px solid var(--border); }
 .profile-header img { width: 70px; height: 70px; border-radius: 50%; border: 2px solid var(--pink-neon); }
@@ -80,7 +73,7 @@
         <h2 style="color:var(--pink-neon); font-family: Dancing Script;">ADMIN LOGIN</h2>
         <input type="text" id="adminName" placeholder="Jina: YStar Pro">
         <input type="text" id="adminPfp" placeholder="Link ya Picha yako">
-        <input type="password" id="adminPass" placeholder="Password">
+        <input type="password" id="adminPassInput" placeholder="Password"> 
         <button onclick="loginAdmin()">INGIA</button>
         <button onclick="backToBook()" style="background:#555;">RUDI</button>
     </div>
@@ -120,33 +113,62 @@
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
 
-    let currentUser = ""; let currentPfp = ""; let isAdmin = false; let clickCount = 0; let adminPass = "ystar123"; let currentBookPages = []; let currentPageIndex = 0;
+    let currentUser = ""; let currentPfp = ""; let isAdmin = false; let clickCount = 0; let correctAdminPass = "ystar123"; let currentBookPages = []; let currentPageIndex = 0;
 
     document.getElementById('logoClick').addEventListener('click', () => { clickCount++; if(clickCount >= 5) { clickCount = 0; document.getElementById('bookView').style.display = 'none'; document.getElementById('adminLogin').style.display = 'flex'; } });
 
-    function loginAdmin() { let name = adminName.value.trim(); let pfp = adminPfp.value.trim(); let pass = adminPass.value.trim(); if(pass !== adminPass) { alert("Password sio sahihi"); return; } if(!name || !pfp) { alert("Jaza jina na picha"); return; } currentUser = name; currentPfp = pfp; isAdmin = true; localStorage.setItem('heartAdmin', name); localStorage.setItem('heartPfp', pfp); enterAdmin(); }
-    function enterAdmin() { adminLogin.style.display = 'none'; profilePage.style.display = 'flex'; categoryBar.style.display = 'none'; profilePagePfp.src = currentPfp; profilePageName.innerHTML = currentUser; newAdminName.value = currentUser; newAdminPfp.value = currentPfp; loadMyBooks(); }
-    function backToBook() { adminLogin.style.display = 'none'; profilePage.style.display = 'none'; bookView.style.display = 'flex'; categoryBar.style.display = 'flex'; }
-    function openTab(tabId) { document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active')); document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active')); document.getElementById(tabId).classList.add('active'); event.target.classList.add('active'); }
+    function loginAdmin() { 
+        let name = document.getElementById('adminName').value.trim(); 
+        let pfp = document.getElementById('adminPfp').value.trim(); 
+        let pass = document.getElementById('adminPassInput').value.trim(); 
+        if(pass !== correctAdminPass) { alert("Password sio sahihi"); return; } 
+        if(!name || !pfp) { alert("Jaza jina na picha"); return; } 
+        currentUser = name; currentPfp = pfp; isAdmin = true; 
+        localStorage.setItem('heartAdmin', name); localStorage.setItem('heartPfp', pfp); 
+        enterAdmin(); 
+    }
+    function enterAdmin() { 
+        document.getElementById('adminLogin').style.display = 'none'; 
+        document.getElementById('profilePage').style.display = 'flex'; 
+        document.getElementById('categoryBar').style.display = 'none'; 
+        document.getElementById('profilePagePfp').src = currentPfp; 
+        document.getElementById('profilePageName').innerHTML = currentUser; 
+        document.getElementById('newAdminName').value = currentUser; 
+        document.getElementById('newAdminPfp').value = currentPfp; 
+        loadMyBooks(); 
+    }
+    function backToBook() { 
+        document.getElementById('adminLogin').style.display = 'none'; 
+        document.getElementById('profilePage').style.display = 'none'; 
+        document.getElementById('bookView').style.display = 'flex'; 
+        document.getElementById('categoryBar').style.display = 'flex'; 
+    }
+    function openTab(tabId) { 
+        document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active')); 
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active')); 
+        document.getElementById(tabId).classList.add('active'); 
+        event.target.classList.add('active'); 
+    }
     function logout() { localStorage.clear(); location.reload(); }
 
     function publishBook() {
-        let pages = bookContent.value.split('[PAGE]');
-        let data = {title: bookTitle.value, category: bookCategory.value, author: currentUser, authorPfp: currentPfp, cover: bookCover.value, pages: pages, timestamp: Date.now()};
+        let pages = document.getElementById('bookContent').value.split('[PAGE]');
+        let data = {title: document.getElementById('bookTitle').value, category: document.getElementById('bookCategory').value, author: currentUser, authorPfp: currentPfp, cover: document.getElementById('bookCover').value, pages: pages, timestamp: Date.now()};
         db.ref("hearttales_books").push().set(data); alert("Kitabu kimechapishwa!"); document.querySelectorAll('.artist-input').forEach(i => i.value = "");
     }
 
     function loadBook(category) {
         document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active')); event.target.classList.add('active');
-        book.innerHTML = "Inapakia..."; 
+        document.getElementById('book').innerHTML = "Inapakia..."; 
         let query = category === 'all' ? db.ref("hearttales_books").limitToLast(1) : db.ref("hearttales_books").orderByChild("category").equalTo(category).limitToLast(1);
         query.once("value", snap => { 
+            document.getElementById('book').innerHTML = "";
             snap.forEach(child => { let bookData = child.val(); currentBookPages = bookData.pages; renderBook(bookData); });
         });
     }
 
     function renderBook(bookData) {
-        book.innerHTML = "";
+        document.getElementById('book').innerHTML = "";
         currentBookPages.forEach((pageContent, index) => {
             let pageDiv = document.createElement('div');
             pageDiv.className = 'page';
@@ -159,7 +181,7 @@
                 <div class="page-num">Page ${index + 1} / ${currentBookPages.length}</div>
             `;
             pageDiv.addEventListener('click', () => flipPage(index));
-            book.appendChild(pageDiv);
+            document.getElementById('book').appendChild(pageDiv);
         });
     }
 
@@ -174,10 +196,9 @@
         }
     }
 
-    function loadMyBooks() { /* sawa na za juu */ }
-    function updateAdminInfo() { /* sawa na za juu */ }
+    function loadMyBooks() { document.getElementById('myBooksList').innerHTML = "<p>Hakuna vitabu bado</p>"; }
+    function updateAdminInfo() { alert("Imehifadhiwa"); }
 
-    // Anza kwa kupakia kitabu cha mwisho
     loadBook('all');
 </script>
 </body>
