@@ -7,7 +7,13 @@
 <link rel="icon" href="https://i.postimg.cc/vZsmk4BF/file-00000805881f4b4bebbc524a36936.png">
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Dancing+Script:wght@700&family=Cormorant+Garamond:wght@400;700&display=swap');
-    :root {--bg:#010101; --card:#F5F0E6; --border:#C0B49A; --pink-neon:#FF00F5; --purple-neon:#A100FF; --text:#2B2B2B; --book-shadow: rgba(0,0,0,0.3); --success:#00FF88;}
+    :root {
+        --bg:#010101; --card:#F5F0E6; --border:#C0B49A; --pink-neon:#FF00F5; --purple-neon:#A100FF;
+        --text:#2B2B2B; --book-shadow: rgba(0,0,0,0.3); --success:#00FF88;
+        /* Rangi mpya za kusoma */
+        --read-bg: #1a1a1a;
+        --read-text: #E0E0E0;
+    }
     * { box-sizing: border-box; margin: 0; padding: 0; }
     html, body { height: 100%; width: 100%; overflow: hidden; background: var(--bg); color: var(--text); font-family: 'Cormorant Garamond', serif; }
 .app-container { width: 100vw; height: 100vh; background: #000; display: flex; flex-direction: column; }
@@ -24,13 +30,43 @@
 .category-btn svg { width: 10px; height: 10px; fill: currentColor; }
 .book-container { flex: 1; display: flex; justify-content: center; align-items: center; background: linear-gradient(to bottom, #1a1a1a, #000); perspective: 2000px; overflow-y: auto; }
 .book { width: 100%; height: 100%; position: relative; transform-style: preserve-3d; }
-.page { width: 100%; height: 100%; position: absolute; background: var(--card); border: none; border-radius: 0; box-shadow: none; padding: 25px 20px; overflow-y: auto; transform-origin: left; transition: transform 0.8s ease; background-image: linear-gradient(to right, rgba(0,0,0,0.05) 1px, transparent 1px); background-size: 20px 100%; }
-.page h2 { font-family: 'Dancing Script', cursive; font-size: 24px; color: var(--pink-neon); text-align: center; margin-bottom: 15px; }
-.page img { width: 100%; border-radius: 5px; margin-bottom: 15px; }
-.page p { font-size: 16px; line-height: 1.8; text-align: justify; }
-.page-num { position: absolute; bottom: 15px; right: 20px; font-family: Orbitron; font-size: 10px; color: #888; }
+
+    /* PAGE YA KUSOMA - DARK MODE */
+.page {
+    width: 100%; height: 100%; position: absolute;
+    background: var(--read-bg); /* Imebadilika kuwa nyeusi */
+    color: var(--read-text); /* Maandishi meupe */
+    border: none; border-radius: 0; box-shadow: none;
+    padding: 30px 25px; overflow-y: auto; transform-origin: left;
+    transition: transform 0.8s ease;
+    /* Nimeondoa mistari ya daftari */
+    background-image: none;
+}
+.page h2 {
+    font-family: 'Dancing Script', cursive; font-size: 26px;
+    color: var(--pink-neon); text-align: center; margin-bottom: 20px;
+    border-bottom: 1px solid #333; padding-bottom: 10px;
+}
+.page p { font-size: 17px; line-height: 2; text-align: justify; } /* line-height nimeiongeza */
+.page-num { position: absolute; bottom: 15px; right: 20px; font-family: Orbitron; font-size: 10px; color: #666; }
+
+    /* COVER ITAKE KABISA */
+.book-cover-page {
+    width: 100%; height: 100%; background: var(--read-bg);
+    display: flex; flex-direction: column; justify-content: center; align-items: center;
+    padding: 20px;
+}
+.book-cover-page img {
+    width: 80%; max-width: 300px; border-radius: 10px;
+    box-shadow: 0 0 30px rgba(255,0,245,0.3);
+    border: 2px solid var(--pink-neon);
+    margin-bottom: 20px;
+}
+.book-cover-page h2 {
+    font-size: 28px; color: var(--pink-neon); font-family: Dancing Script;
+}
+
 .page.flipped { transform: rotateY(-180deg); }
-.page.next { z-index: 2; }
 .admin-login { display: none; flex-direction: column; padding: 30px 20px; gap: 15px; text-align: center; justify-content: center; height: 100%; width: 100%; background: #000; }
 .admin-login img { width: 80px; height: 80px; border-radius: 15px; margin: 0 auto; border: 2px solid var(--pink-neon); }
 .admin-login input { width: 100%; background: var(--card); border: 1px solid var(--pink-neon); color: #000; padding: 12px; border-radius: 8px; font-family: 'Orbitron'; text-align: center; }
@@ -157,14 +193,14 @@
         document.getElementById('profilePage').style.display = 'none';
         document.getElementById('bookView').style.display = 'flex';
         document.getElementById('categoryBar').style.display = 'flex';
-        loadBook('all'); // Ireload vitabu ukirudi
+        loadBook('all');
     }
     function openTab(tabId) {
         document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
         document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
         document.getElementById(tabId).classList.add('active');
         event.target.classList.add('active');
-        if(tabId === 'manageTab') loadMyBooks(); // Ireload vitabu vyako ukiingia hapa
+        if(tabId === 'manageTab') loadMyBooks();
     }
     function logout() { db.ref("hearttales_online/" + userId).remove(); localStorage.clear(); location.reload(); }
 
@@ -175,8 +211,7 @@
         db.ref("hearttales_books").push().set(data).then(() => {
             alert("Kitabu kimechapishwa!");
             document.querySelectorAll('.artist-input').forEach(i => i.value = "");
-            loadBook('all'); // Ireload screen kuu
-            loadMyBooks(); // Ireload vitabu vyako
+            loadBook('all'); loadMyBooks();
         });
     }
 
@@ -199,12 +234,23 @@
             pageDiv.className = 'page';
             pageDiv.id = 'page-' + index;
             if(index > 0) pageDiv.style.zIndex = 100 - index;
-            pageDiv.innerHTML = `
-                ${index === 0 && bookData.cover? `<img src="${bookData.cover}">` : ""}
-                <h2>${bookData.title}</h2>
-                <p>${pageContent}</p>
-                <div class="page-num">Page ${index + 1} / ${currentBookPages.length}</div>
-            `;
+
+            // IKIWA NI PAGE YA 1 NA KUNA COVER, IWE KANDO
+            if(index === 0 && bookData.cover) {
+                pageDiv.innerHTML = `
+                    <div class="book-cover-page">
+                        <img src="${bookData.cover}">
+                        <h2>${bookData.title}</h2>
+                        <p style="color:#888;">Bofya ili uanze kusoma</p>
+                    </div>
+                `;
+            } else {
+                pageDiv.innerHTML = `
+                    <h2>${bookData.title}</h2>
+                    <p>${pageContent}</p>
+                    <div class="page-num">Page ${index + 1} / ${currentBookPages.length}</div>
+                `;
+            }
             pageDiv.addEventListener('click', () => flipPage(index));
             document.getElementById('book').appendChild(pageDiv);
         });
