@@ -10,9 +10,7 @@
     :root {
         --bg:#010101; --card:#F5F0E6; --border:#C0B49A; --pink-neon:#FF00F5; --purple-neon:#A100FF;
         --text:#2B2B2B; --book-shadow: rgba(0,0,0,0.3); --success:#00FF88;
-        /* Rangi mpya za kusoma */
-        --read-bg: #1a1a1a;
-        --read-text: #E0E0E0;
+        --read-bg: #1a1a1a; --read-text: #E0E0E0;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
     html, body { height: 100%; width: 100%; overflow: hidden; background: var(--bg); color: var(--text); font-family: 'Cormorant Garamond', serif; }
@@ -31,39 +29,40 @@
 .book-container { flex: 1; display: flex; justify-content: center; align-items: center; background: linear-gradient(to bottom, #1a1a1a, #000); perspective: 2000px; overflow-y: auto; }
 .book { width: 100%; height: 100%; position: relative; transform-style: preserve-3d; }
 
-    /* PAGE YA KUSOMA - DARK MODE */
+    /* AUTHOR HEADER JUU YA KITABU */
+.author-header {
+    display: flex; align-items: center; gap: 8px;
+    padding: 10px 15px; background: #111; border-bottom: 1px solid #333;
+    position: sticky; top: 0; z-index: 1000;
+}
+.author-header img { width: 30px; height: 30px; border-radius: 50%; border: 1px solid var(--pink-neon); }
+.author-header.name { font-family: Orbitron; font-size: 11px; color: var(--pink-neon); font-weight: 700; }
+.author-header.v { width: 10px; height: 10px; background: #0095F6; border-radius: 50%; display: inline-flex; }
+.author-header.v svg { width: 7px; height: 7px; fill: #fff; }
+
 .page {
     width: 100%; height: 100%; position: absolute;
-    background: var(--read-bg); /* Imebadilika kuwa nyeusi */
-    color: var(--read-text); /* Maandishi meupe */
+    background: var(--read-bg); color: var(--read-text);
     border: none; border-radius: 0; box-shadow: none;
-    padding: 30px 25px; overflow-y: auto; transform-origin: left;
-    transition: transform 0.8s ease;
-    /* Nimeondoa mistari ya daftari */
-    background-image: none;
+    padding: 0; overflow-y: auto; transform-origin: left;
+    transition: transform 0.8s ease; background-image: none;
 }
-.page h2 {
-    font-family: 'Dancing Script', cursive; font-size: 26px;
-    color: var(--pink-neon); text-align: center; margin-bottom: 20px;
-    border-bottom: 1px solid #333; padding-bottom: 10px;
-}
-.page p { font-size: 17px; line-height: 2; text-align: justify; } /* line-height nimeiongeza */
+.page-content { padding: 20px 25px 30px 25px; }
+.page h2 { font-family: 'Dancing Script', cursive; font-size: 26px; color: var(--pink-neon); text-align: center; margin-bottom: 20px; border-bottom: 1px solid #333; padding-bottom: 10px; }
+.page p { font-size: 17px; line-height: 2; text-align: justify; }
 .page-num { position: absolute; bottom: 15px; right: 20px; font-family: Orbitron; font-size: 10px; color: #666; }
 
-    /* COVER ITAKE KABISA */
+    /* COVER 2.35:1 WIDESCREEN */
 .book-cover-page {
-    width: 100%; height: 100%; background: var(--read-bg);
+    width: 100%; background: var(--read-bg);
     display: flex; flex-direction: column; justify-content: center; align-items: center;
-    padding: 20px;
+    padding: 15px;
 }
-.book-cover-page img {
-    width: 80%; max-width: 300px; border-radius: 10px;
-    box-shadow: 0 0 30px rgba(255,0,245,0.3);
-    border: 2px solid var(--pink-neon);
-    margin-bottom: 20px;
-}
-.book-cover-page h2 {
-    font-size: 28px; color: var(--pink-neon); font-family: Dancing Script;
+.book-cover-page.cover-img {
+    width: 100%; aspect-ratio: 2.35 / 1; /* HII HAPA 2.35:1 */
+    object-fit: cover; border-radius: 8px;
+    box-shadow: 0 0 20px rgba(255,0,245,0.2);
+    border: 1px solid #333; margin-bottom: 15px;
 }
 
 .page.flipped { transform: rotateY(-180deg); }
@@ -82,9 +81,11 @@
 .tab-content.active { display: flex; }
 .artist-input { width: 100%; background: var(--card); border: 1px solid var(--border); color: #000; padding: 10px; border-radius: 8px; font-family: 'Cormorant Garamond'; font-size: 14px; }
 .post-btn { display: flex; align-items: center; justify-content: center; gap: 5px; background: linear-gradient(135deg, var(--pink-neon), var(--purple-neon)); color: #000; border: none; border-radius: 8px; padding: 10px; cursor: pointer; font-weight: 900; font-family: 'Orbitron'; }
+.danger-btn { background: #FF0040; }
 .icon { width: 12px; height: 12px; fill: currentColor; }
 .book-cover { width:95%;height:120px;background:#222;border:1px solid var(--pink-neon);margin:10px auto;border-radius:8px;padding:10px;cursor:pointer;text-align:center;color:var(--pink-neon); display:flex; flex-direction:column; justify-content:center; }
 .book-cover:hover { background: #333; }
+.book-item-admin { background:#222; padding:10px; border-radius:8px; display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; }
 </style>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
@@ -129,14 +130,14 @@
         <div class="admin-tabs">
             <button class="tab-btn active" onclick="openTab('postTab')"><svg viewBox="0 0 24 24"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg> ANDIKA</button>
             <button class="tab-btn" onclick="openTab('manageTab')"><svg viewBox="0 0 24 24"><path d="M3 13h2v-2H3v2zm0 4h2v-2H3v2zm0-8h2V7H3v2zm4 4h14v-2H7v2zm0 4h14v-2H7v2zM7 7v2h14V7H7z"/></svg> VITABU</button>
-            <button class="tab-btn" onclick="openTab('settingsTab')"><svg viewBox="0 0 24 24"><path d="M19.43 12.98c.04-.32.07-.64.07-.98s-.03-.66-.07-.98l2.11-1.65c.19-.15.24-.42.12-.64l-2-3.46c-.12-.22-.39-.3-.61-.22l-2.49 1c-.52-.4-1.08-.73-1.69-.98l-.38-2.65C14.46 2.18 14.25 2 14 2h-4c-.25 0-.46.18-.49.42l-.38 2.65c-.61.25-1.17.59-1.69.98l-2.49-1c-.23-.09-.49 0-.61.22l-2 3.46c-.13.22-.07.49.12.64l2.11 1.65c-.04.32-.07.65-.07.98s.03.66.07.98l-2.11 1.65c-.19.15-.24.42-.12.64l2 3.46c.12.22.39.3.61.22l2.49-1c.52.4 1.08.73 1.69.98l.38 2.65c.03.24.24.42.49.42h4c.25 0.46-.18.49-.42l.38-2.65c.61-.25 1.17-.59 1.69-.98l2.49 1c.23.09.49 0.61-.22l2-3.46c.12-.22.07-.49-.12-.64l-2.11-1.65zM12 15.5c-1.93 0-3.5-1.57-3.5-3.5s1.57-3.5 3.5-3.5 3.5 1.57 3.5 3.5-1.57 3.5-3.5 3.5z"/></svg> SETTINGS</button>
+            <button class="tab-btn" onclick="openTab('settingsTab')"><svg viewBox="0 0 24 24"><path d="M19.43 12.98c.04-.32.07-.64.07-.98s-.03-.66-.07-.98l2.11-1.65c.19-.15.24-.42.12-.64l-2-3.46c-.12-.22-.39-.3-.61-.22l-2.49 1c-.52-.4-1.08-.73-1.69-.98l-.38-2.65C14.46 2.18 14.25 2 14 2h-4c-.25 0-.46.18-.49.42l-.38 2.65c-.61.25-1.17.59-1.69.98l-2.49-1c-.23-.09-.49 0-.61.22l-2 3.46c-.13.22-.07.49.12.64l2.11 1.65c-.04.32-.07.65-.07.98s.03.66.07.98l-2.11 1.65c-.19.15-.24.42-.12.64l2 3.46c.12.22.39.3.61.22l2.49-1c.52.4 1.08.73 1.69.98l.38 2.65c.03.24.24.42.49.42h4c.25 0-.46-.18-.49-.42l.38-2.65c.61-.25 1.17-.59 1.69-.98l2.49 1c.23.09.49 0-.61-.22l2-3.46c.12-.22.07-.49-.12-.64l-2.11-1.65zM12 15.5c-1.93 0-3.5-1.57-3.5-3.5s1.57-3.5 3.5-3.5 3.5 1.57 3.5 3.5-1.57 3.5-3.5 3.5z"/></svg> SETTINGS</button>
         </div>
         <div id="postTab" class="tab-content active">
             <h3 style="color:var(--pink-neon);">ANDIKA KITABU KIPYA</h3>
             <input type="text" id="bookTitle" class="artist-input" placeholder="Jina la Kitabu/Story">
             <select id="bookCategory" class="artist-input"><option value="Love">Love</option><option value="Inspiration">Inspiration</option></select>
             <textarea id="bookContent" class="artist-input" placeholder="Andika story yako hapa. Tumia [PAGE] kutenganisha page mpya" rows="8"></textarea>
-            <input type="text" id="bookCover" class="artist-input" placeholder="Link ya Cover ya Kitabu">
+            <input type="text" id="bookCover" class="artist-input" placeholder="Link ya Cover ya Kitabu - 2.35:1">
             <button class="post-btn" onclick="publishBook()"><svg class="icon" viewBox="0 0 24 24"><path d="M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z"/></svg> CHAPISHA KITABU</button>
         </div>
         <div id="manageTab" class="tab-content"><h3 style="color:var(--pink-neon);">VITABU VYANGU</h3><div id="myBooksList"></div></div>
@@ -235,20 +236,32 @@
             pageDiv.id = 'page-' + index;
             if(index > 0) pageDiv.style.zIndex = 100 - index;
 
-            // IKIWA NI PAGE YA 1 NA KUNA COVER, IWE KANDO
+            // AUTHOR HEADER + COVER 2.35:1
+            let authorHeader = `
+                <div class="author-header">
+                    <img src="${bookData.authorPfp}">
+                    <span class="name">${bookData.author}</span>
+                    <span class="v"><svg viewBox="0 0 24 24"><path d="M12 2L3 5l9 19 9-19-9-3z"/></svg></span>
+                </div>
+            `;
+
             if(index === 0 && bookData.cover) {
                 pageDiv.innerHTML = `
+                    ${authorHeader}
                     <div class="book-cover-page">
-                        <img src="${bookData.cover}">
+                        <img src="${bookData.cover}" class="cover-img">
                         <h2>${bookData.title}</h2>
                         <p style="color:#888;">Bofya ili uanze kusoma</p>
                     </div>
                 `;
             } else {
                 pageDiv.innerHTML = `
-                    <h2>${bookData.title}</h2>
-                    <p>${pageContent}</p>
-                    <div class="page-num">Page ${index + 1} / ${currentBookPages.length}</div>
+                    ${authorHeader}
+                    <div class="page-content">
+                        <h2>${bookData.title}</h2>
+                        <p>${pageContent}</p>
+                        <div class="page-num">Page ${index + 1} / ${currentBookPages.length}</div>
+                    </div>
                 `;
             }
             pageDiv.addEventListener('click', () => flipPage(index));
@@ -274,9 +287,26 @@
             if(!snap.exists()) { document.getElementById('myBooksList').innerHTML = "<p>Hujachapisha kitabu bado</p>"; return; }
             snap.forEach(child => {
                 let data = child.val();
-                document.getElementById('myBooksList').innerHTML += `<div class="book-cover" style="height:auto;"><b>${data.title}</b><br><small>${data.category}</small></div>`;
+                // IMEONGEZWA BUTTON YA KUFUTA
+                document.getElementById('myBooksList').innerHTML += `
+                    <div class="book-item-admin">
+                        <div><b>${data.title}</b><br><small>${data.category}</small></div>
+                        <button class="post-btn danger-btn" onclick="deleteBook('${child.key}')">
+                            <svg class="icon" viewBox="0 0 24 24"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg> FUTA
+                        </button>
+                    </div>
+                `;
             });
         });
+    }
+    function deleteBook(id) {
+        if(confirm("Una uhakika unataka kufuta kitabu hiki?")) {
+            db.ref("hearttales_books/" + id).remove().then(() => {
+                alert("Kitabu kimefutwa");
+                loadMyBooks();
+                loadBook('all');
+            });
+        }
     }
     function updateAdminInfo() { alert("Imehifadhiwa"); }
 
