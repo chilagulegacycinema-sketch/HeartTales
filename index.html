@@ -22,7 +22,7 @@
 .category-btn { display: flex; align-items: center; gap: 4px; padding: 3px 8px; border-radius: 12px; border: 1px solid var(--pink-neon); background: transparent; color: var(--pink-neon); font-family: Orbitron; font-weight: 700; font-size: 9px; cursor: pointer; }
 .category-btn.active { background: var(--pink-neon); color: #000; }
 .category-btn svg { width: 10px; height: 10px; fill: currentColor; }
-.book-container { flex: 1; display: flex; justify-content: center; align-items: center; background: linear-gradient(to bottom, #1a1a1a, #000); perspective: 2000px; }
+.book-container { flex: 1; display: flex; justify-content: center; align-items: center; background: linear-gradient(to bottom, #1a1a1a, #000); perspective: 2000px; overflow-y: auto; }
 .book { width: 100%; height: 100%; position: relative; transform-style: preserve-3d; }
 .page { width: 100%; height: 100%; position: absolute; background: var(--card); border: none; border-radius: 0; box-shadow: none; padding: 25px 20px; overflow-y: auto; transform-origin: left; transition: transform 0.8s ease; background-image: linear-gradient(to right, rgba(0,0,0,0.05) 1px, transparent 1px); background-size: 20px 100%; }
 .page h2 { font-family: 'Dancing Script', cursive; font-size: 24px; color: var(--pink-neon); text-align: center; margin-bottom: 15px; }
@@ -48,6 +48,7 @@
 .post-btn { display: flex; align-items: center; justify-content: center; gap: 5px; background: linear-gradient(135deg, var(--pink-neon), var(--purple-neon)); color: #000; border: none; border-radius: 8px; padding: 10px; cursor: pointer; font-weight: 900; font-family: 'Orbitron'; }
 .icon { width: 12px; height: 12px; fill: currentColor; }
 .book-cover { width:95%;height:120px;background:#222;border:1px solid var(--pink-neon);margin:10px auto;border-radius:8px;padding:10px;cursor:pointer;text-align:center;color:var(--pink-neon); display:flex; flex-direction:column; justify-content:center; }
+.book-cover:hover { background: #333; }
 </style>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
@@ -63,14 +64,14 @@
     </div>
 
     <div class="category-bar" id="categoryBar">
-        <button class="category-btn active" onclick="loadBook('all')"><svg viewBox="0 0 24 24"><path d="M4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm16-4H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-1 9H9V9h10v2zm-4 4H9v-2h6v2zm4-8H9V5h10v2z"/></svg> ZOTE</button>
+        <button class="category-btn active" onclick="loadBook('all')"><svg viewBox="0 0 24 24"><path d="M4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm16-4H8c-1.1 0-2.9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-1 9H9V9h10v2zm-4 4H9v-2h6v2zm4-8H9V5h10v2z"/></svg> ZOTE</button>
         <button class="category-btn" onclick="loadBook('Love')"><svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg> LOVE</button>
-        <button class="category-btn" onclick="loadBook('Inspiration')"><svg viewBox="0 0 24 24"><path d="M9 21c0 .55.45 1 1 1h4c.55 0 1-.45 1-1v-1H9v1zm3-19C8.14 2 5 5.14 5 9c0 2.38 1.19 4.47 3 5.74V17c0 .55.45 1 1 1h6c.55 0 1-.45 1-1v-2.26c1.81-1.27 3-3.36 3-5.74 0-3.86-3.14-7-7-7z"/></svg> INSPO</button>
+        <button class="category-btn" onclick="loadBook('Inspiration')"><svg viewBox="0 0 24 24"><path d="M9 21c0.55.45 1 1 1h4c.55 0 1-.45 1-1v-1H9v1zm3-19C8.14 2 5 5.14 5 9c0 2.38 1.19 4.47 3 5.74V17c0.55.45 1 1 1h6c.55 0 1-.45 1-1v-2.26c1.81-1.27 3-3.36 3-5.74 0-3.86-3.14-7-7-7z"/></svg> INSPO</button>
     </div>
 
     <div id="bookView" class="book-container">
         <div class="book" id="book">
-            <p style="color:#888; text-align:center; padding-top:50px;">Chagua kitabu cha kusoma...</p>
+            <p style="color:#888; text-align:center; padding-top:50px;">Inapakia vitabu...</p>
         </div>
     </div>
 
@@ -79,7 +80,7 @@
         <h2 style="color:var(--pink-neon); font-family: Dancing Script;">ADMIN LOGIN</h2>
         <input type="text" id="adminName" placeholder="Jina: YStar Pro">
         <input type="text" id="adminPfp" placeholder="Link ya Picha yako">
-        <input type="password" id="adminPassInput" placeholder="Password"> 
+        <input type="password" id="adminPassInput" placeholder="Password">
         <button onclick="loginAdmin()"><svg class="icon" viewBox="0 0 24 24"><path d="M11 7L9.6 8.4l2.6 2.6H2v2h10.2l-2.6 2.6L11 17l5-5-5-5zM20 19h-8v2h8c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2h-8v2h8v14z"/></svg> INGIA</button>
         <button onclick="backToBook()" style="background:#555;"><svg class="icon" viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg> RUDI</button>
     </div>
@@ -92,7 +93,7 @@
         <div class="admin-tabs">
             <button class="tab-btn active" onclick="openTab('postTab')"><svg viewBox="0 0 24 24"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg> ANDIKA</button>
             <button class="tab-btn" onclick="openTab('manageTab')"><svg viewBox="0 0 24 24"><path d="M3 13h2v-2H3v2zm0 4h2v-2H3v2zm0-8h2V7H3v2zm4 4h14v-2H7v2zm0 4h14v-2H7v2zM7 7v2h14V7H7z"/></svg> VITABU</button>
-            <button class="tab-btn" onclick="openTab('settingsTab')"><svg viewBox="0 0 24 24"><path d="M19.43 12.98c.04-.32.07-.64.07-.98s-.03-.66-.07-.98l2.11-1.65c.19-.15.24-.42.12-.64l-2-3.46c-.12-.22-.39-.3-.61-.22l-2.49 1c-.52-.4-1.08-.73-1.69-.98l-.38-2.65C14.46 2.18 14.25 2 14 2h-4c-.25 0-.46.18-.49.42l-.38 2.65c-.61.25-1.17.59-1.69.98l-2.49-1c-.23-.09-.49 0-.61.22l-2 3.46c-.13.22-.07.49.12.64l2.11 1.65c-.04.32-.07.65-.07.98s.03.66.07.98l-2.11 1.65c-.19.15-.24.42-.12.64l2 3.46c.12.22.39.3.61.22l2.49-1c.52.4 1.08.73 1.69.98l.38 2.65c.03.24.24.42.49.42h4c.25 0 .46-.18.49-.42l.38-2.65c.61-.25 1.17-.59 1.69-.98l2.49 1c.23.09.49 0 .61-.22l2-3.46c.12-.22.07-.49-.12-.64l-2.11-1.65zM12 15.5c-1.93 0-3.5-1.57-3.5-3.5s1.57-3.5 3.5-3.5 3.5 1.57 3.5 3.5-1.57 3.5-3.5 3.5z"/></svg> SETTINGS</button>
+            <button class="tab-btn" onclick="openTab('settingsTab')"><svg viewBox="0 0 24 24"><path d="M19.43 12.98c.04-.32.07-.64.07-.98s-.03-.66-.07-.98l2.11-1.65c.19-.15.24-.42.12-.64l-2-3.46c-.12-.22-.39-.3-.61-.22l-2.49 1c-.52-.4-1.08-.73-1.69-.98l-.38-2.65C14.46 2.18 14.25 2 14 2h-4c-.25 0-.46.18-.49.42l-.38 2.65c-.61.25-1.17.59-1.69.98l-2.49-1c-.23-.09-.49 0-.61.22l-2 3.46c-.13.22-.07.49.12.64l2.11 1.65c-.04.32-.07.65-.07.98s.03.66.07.98l-2.11 1.65c-.19.15-.24.42-.12.64l2 3.46c.12.22.39.3.61.22l2.49-1c.52.4 1.08.73 1.69.98l.38 2.65c.03.24.24.42.49.42h4c.25 0.46-.18.49-.42l.38-2.65c.61-.25 1.17-.59 1.69-.98l2.49 1c.23.09.49 0.61-.22l2-3.46c.12-.22.07-.49-.12-.64l-2.11-1.65zM12 15.5c-1.93 0-3.5-1.57-3.5-3.5s1.57-3.5 3.5-3.5 3.5 1.57 3.5 3.5-1.57 3.5-3.5 3.5z"/></svg> SETTINGS</button>
         </div>
         <div id="postTab" class="tab-content active">
             <h3 style="color:var(--pink-neon);">ANDIKA KITABU KIPYA</h3>
@@ -108,8 +109,8 @@
             <input type="text" id="newAdminName" class="artist-input" placeholder="Jina Jipya">
             <input type="text" id="newAdminPfp" class="artist-input" placeholder="Picha Jipya">
             <input type="password" id="newAdminPass" class="artist-input" placeholder="Password Mpya">
-            <button class="post-btn" onclick="updateAdminInfo()"><svg class="icon" viewBox="0 0 24 24"><path d="M17 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V7l-4-4zm-5 16c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3zm3-10H5V5h10v4z"/></svg> HIFADHI</button>
-            <button class="post-btn" onclick="logout()" style="background:#FF0040;"><svg class="icon" viewBox="0 0 24 24"><path d="M10.09 15.59L11.5 17l5-5-5-5-1.41 1.41L12.67 11H3v2h9.67l-2.58 2.59zM19 3H5c-1.11 0-2 .9-2 2v4h2V5h14v14H5v-4H3v4c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"/></svg> TOKA ADMIN</button>
+            <button class="post-btn" onclick="updateAdminInfo()"><svg class="icon" viewBox="0 0 24 24"><path d="M17 3H5c-1.11 0-2.9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V7l-4-4zm-5 16c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3zm3-10H5V5h10v4z"/></svg> HIFADHI</button>
+            <button class="post-btn" onclick="logout()" style="background:#FF0040;"><svg class="icon" viewBox="0 0 24 24"><path d="M10.09 15.59L11.5 17l5-5-5-5-1.41 1.41L12.67 11H3v2h9.67l-2.58 2.59zM19 3H5c-1.11 0-2.9-2 2v4h2V5h14v14H5v-4H3v4c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"/></svg> TOKA ADMIN</button>
         </div>
     </div>
 </div>
@@ -131,53 +132,61 @@
 
     document.getElementById('logoClick').addEventListener('click', () => { clickCount++; if(clickCount >= 5) { clickCount = 0; document.getElementById('bookView').style.display = 'none'; document.getElementById('adminLogin').style.display = 'flex'; } });
 
-    function loginAdmin() { 
-        let name = document.getElementById('adminName').value.trim(); 
-        let pfp = document.getElementById('adminPfp').value.trim(); 
-        let pass = document.getElementById('adminPassInput').value.trim(); 
-        if(pass !== correctAdminPass) { alert("Password sio sahihi"); return; } 
-        if(!name || !pfp) { alert("Jaza jina na picha"); return; } 
-        currentUser = name; currentPfp = pfp; isAdmin = true; 
-        localStorage.setItem('heartAdmin', name); localStorage.setItem('heartPfp', pfp); 
-        enterAdmin(); 
+    function loginAdmin() {
+        let name = document.getElementById('adminName').value.trim();
+        let pfp = document.getElementById('adminPfp').value.trim();
+        let pass = document.getElementById('adminPassInput').value.trim();
+        if(pass!== correctAdminPass) { alert("Password sio sahihi"); return; }
+        if(!name ||!pfp) { alert("Jaza jina na picha"); return; }
+        currentUser = name; currentPfp = pfp; isAdmin = true;
+        localStorage.setItem('heartAdmin', name); localStorage.setItem('heartPfp', pfp);
+        enterAdmin();
     }
-    function enterAdmin() { 
-        document.getElementById('adminLogin').style.display = 'none'; 
-        document.getElementById('profilePage').style.display = 'flex'; 
-        document.getElementById('categoryBar').style.display = 'none'; 
-        document.getElementById('profilePagePfp').src = currentPfp; 
-        document.getElementById('profilePageName').innerHTML = currentUser; 
-        document.getElementById('newAdminName').value = currentUser; 
-        document.getElementById('newAdminPfp').value = currentPfp; 
-        loadMyBooks(); 
+    function enterAdmin() {
+        document.getElementById('adminLogin').style.display = 'none';
+        document.getElementById('profilePage').style.display = 'flex';
+        document.getElementById('categoryBar').style.display = 'none';
+        document.getElementById('profilePagePfp').src = currentPfp;
+        document.getElementById('profilePageName').innerHTML = currentUser;
+        document.getElementById('newAdminName').value = currentUser;
+        document.getElementById('newAdminPfp').value = currentPfp;
+        loadMyBooks();
     }
-    function backToBook() { 
-        document.getElementById('adminLogin').style.display = 'none'; 
-        document.getElementById('profilePage').style.display = 'none'; 
-        document.getElementById('bookView').style.display = 'flex'; 
-        document.getElementById('categoryBar').style.display = 'flex'; 
+    function backToBook() {
+        document.getElementById('adminLogin').style.display = 'none';
+        document.getElementById('profilePage').style.display = 'none';
+        document.getElementById('bookView').style.display = 'flex';
+        document.getElementById('categoryBar').style.display = 'flex';
+        loadBook('all'); // Ireload vitabu ukirudi
     }
-    function openTab(tabId) { 
-        document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active')); 
-        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active')); 
-        document.getElementById(tabId).classList.add('active'); 
-        event.target.classList.add('active'); 
+    function openTab(tabId) {
+        document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        document.getElementById(tabId).classList.add('active');
+        event.target.classList.add('active');
+        if(tabId === 'manageTab') loadMyBooks(); // Ireload vitabu vyako ukiingia hapa
     }
     function logout() { db.ref("hearttales_online/" + userId).remove(); localStorage.clear(); location.reload(); }
 
     function publishBook() {
         let pages = document.getElementById('bookContent').value.split('[PAGE]');
+        if(!document.getElementById('bookTitle').value || pages[0] === "") { alert("Jaza Jina na Content"); return; }
         let data = {title: document.getElementById('bookTitle').value, category: document.getElementById('bookCategory').value, author: currentUser, authorPfp: currentPfp, cover: document.getElementById('bookCover').value, pages: pages, timestamp: Date.now()};
-        db.ref("hearttales_books").push().set(data); alert("Kitabu kimechapishwa!"); document.querySelectorAll('.artist-input').forEach(i => i.value = "");
+        db.ref("hearttales_books").push().set(data).then(() => {
+            alert("Kitabu kimechapishwa!");
+            document.querySelectorAll('.artist-input').forEach(i => i.value = "");
+            loadBook('all'); // Ireload screen kuu
+            loadMyBooks(); // Ireload vitabu vyako
+        });
     }
 
     function loadBook(category) {
         document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active')); event.target.classList.add('active');
-        document.getElementById('book').innerHTML = "Inapakia..."; 
-        let query = category === 'all' ? db.ref("hearttales_books").limitToLast(5) : db.ref("hearttales_books").orderByChild("category").equalTo(category).limitToLast(5);
-        query.once("value", snap => { 
+        document.getElementById('book').innerHTML = "Inapakia...";
+        let query = category === 'all'? db.ref("hearttales_books").orderByChild("timestamp").limitToLast(20) : db.ref("hearttales_books").orderByChild("category").equalTo(category).limitToLast(20);
+        query.once("value", snap => {
             document.getElementById('book').innerHTML = "";
-            if(!snap.exists()) { document.getElementById('book').innerHTML = "<p style='color:#888;text-align:center;padding-top:50px;'>Hakuna vitabu bado</p>"; return; }
+            if(!snap.exists()) { document.getElementById('book').innerHTML = "<p style='color:#888;text-align:center;padding-top:50px;'>Hakuna vitabu bado. Kuwa wa kwanza kuchapisha!</p>"; return; }
             snap.forEach(child => { let bookData = child.val(); bookData.id = child.key; let div = document.createElement('div'); div.className = 'book-cover'; div.innerHTML = `<b>${bookData.title}</b><br><small>Na: ${bookData.author}</small>`; div.onclick = () => renderBook(bookData); document.getElementById('book').appendChild(div); });
         });
     }
@@ -191,7 +200,7 @@
             pageDiv.id = 'page-' + index;
             if(index > 0) pageDiv.style.zIndex = 100 - index;
             pageDiv.innerHTML = `
-                ${index === 0 && bookData.cover ? `<img src="${bookData.cover}">` : ""}
+                ${index === 0 && bookData.cover? `<img src="${bookData.cover}">` : ""}
                 <h2>${bookData.title}</h2>
                 <p>${pageContent}</p>
                 <div class="page-num">Page ${index + 1} / ${currentBookPages.length}</div>
@@ -203,7 +212,7 @@
 
     function flipPage(index) {
         let page = document.getElementById('page-' + index);
-        if(page && !page.classList.contains('flipped')) {
+        if(page &&!page.classList.contains('flipped')) {
             page.classList.add('flipped');
             page.style.zIndex = 200 + index;
         } else if(page) {
@@ -212,7 +221,17 @@
         }
     }
 
-    function loadMyBooks() { document.getElementById('myBooksList').innerHTML = "<p>Hakuna vitabu bado</p>"; }
+    function loadMyBooks() {
+        document.getElementById('myBooksList').innerHTML = "Inapakia...";
+        db.ref("hearttales_books").orderByChild("author").equalTo(currentUser).once("value", snap => {
+            document.getElementById('myBooksList').innerHTML = "";
+            if(!snap.exists()) { document.getElementById('myBooksList').innerHTML = "<p>Hujachapisha kitabu bado</p>"; return; }
+            snap.forEach(child => {
+                let data = child.val();
+                document.getElementById('myBooksList').innerHTML += `<div class="book-cover" style="height:auto;"><b>${data.title}</b><br><small>${data.category}</small></div>`;
+            });
+        });
+    }
     function updateAdminInfo() { alert("Imehifadhiwa"); }
 
     setupOnlineStatus();
