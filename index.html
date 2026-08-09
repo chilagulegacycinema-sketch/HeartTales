@@ -8,43 +8,52 @@
     @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap');
     :root { --bg:#000; --red:#FF0040; --blue:#00F0FF; --text:#E0E0E0; --glitch:#00F0FF; }
     * { margin:0; padding:0; box-sizing:border-box; }
-    body { background:var(--bg); color:var(--text); font-family:'Orbitron'; height:100vh; display:flex; justify-content:center; align-items:center; overflow:hidden; }
+    html, body { background:var(--bg); color:var(--text); font-family:'Orbitron'; height:100%; overflow-y:auto; }
 
-   .screen { width:100%; max-width:500px; text-align:center; padding:20px; }
+   .wrapper { width:100%; min-height:100vh; display:flex; justify-content:center; padding:20px 0; }
 
-   .setup h1 { color:var(--red); font-size:32px; text-shadow:0 0 15px var(--red); animation:glitch 2s infinite; letter-spacing:3px; }
+  .screen { width:100%; max-width:500px; text-align:center; padding:20px; }
+
+  .setup h1 { color:var(--red); font-size:32px; text-shadow:0 0 15px var(--red); animation:glitch 2s infinite; letter-spacing:3px; }
     @keyframes glitch { 0%,100%{text-shadow:0 0 10px var(--red);} 50%{text-shadow:2px 0 var(--glitch), -2px 0 var(--red);} }
 
-   .warning { background:rgba(255,0,64,0.15); border:2px solid var(--red); padding:18px; margin:20px 0; border-radius:8px; font-size:12px; line-height:1.7; text-align:left; }
-   .warning strong { color:var(--red); font-size:14px; }
-   .warning.sw { display:block; margin-top:8px; color:#aaa; font-size:11px; }
+  .warning { background:rgba(255,0,64,0.15); border:2px solid var(--red); padding:18px; margin:20px 0; border-radius:8px; font-size:12px; line-height:1.7; text-align:left; }
+  .warning strong { color:var(--red); font-size:14px; }
+  .warning.sw { display:block; margin-top:8px; color:#aaa; font-size:11px; }
 
-   .player-inputs input { width:100%; background:#111; border:1px solid var(--red); color:#fff; padding:14px; margin:8px 0; border-radius:5px; font-family:Orbitron; text-align:center; font-size:14px; }
-   .player-inputs input:focus { outline:none; box-shadow:0 0 10px var(--red); }
+  .player-inputs input { width:100%; background:#111; border:1px solid var(--red); color:#fff; padding:14px; margin:8px 0; border-radius:5px; font-family:Orbitron; text-align:center; font-size:14px; }
+  .player-inputs input:focus { outline:none; box-shadow:0 0 10px var(--red); }
 
-   .start-btn { width:100%; background:var(--red); color:#000; border:none; padding:16px; font-weight:900; font-size:18px; cursor:pointer; margin-top:15px; letter-spacing:2px; }
-   .start-btn:disabled { background:#333; color:#666; cursor:not-allowed; }
+  .start-btn { width:100%; background:var(--red); color:#000; border:none; padding:16px; font-weight:900; font-size:18px; cursor:pointer; margin-top:15px; letter-spacing:2px; }
+  .start-btn:disabled { background:#333; color:#666; cursor:not-allowed; }
 
-   .game-screen { display:none; }
-   .players-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin:20px 0; min-height:320px; }
-   .player-card { background:#111; border:2px solid #333; padding:18px; border-radius:8px; transition:0.8s; font-weight:700; position:relative; height:80px; display:flex; align-items:center; justify-content:center; }
-   .player-card.scanning { border-color:var(--red); background:rgba(255,0,64,0.3); box-shadow:0 0 25px var(--red); animation:shake 0.3s infinite; }
-   .player-card.dead { background:var(--red); border-color:var(--red); }
-   .player-card.winner { background:var(--blue); border-color:var(--blue); box-shadow:0 0 25px var(--blue); }
-   .player-card.name { font-size:14px; letter-spacing:1px; }
-   .player-card.status { position:absolute; bottom:5px; right:8px; font-size:11px; font-weight:900; }
+  .game-screen { display:none; }
+  .players-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin:20px 0; }
+  .player-card { background:#111; border:2px solid #333; padding:18px; border-radius:8px; transition:0.8s; font-weight:700; position:relative; height:80px; display:flex; align-items:center; justify-content:center; }
+  .player-card.scanning { border-color:var(--red); background:rgba(255,0,64,0.3); box-shadow:0 0 25px var(--red); animation:shake 0.3s infinite; }
+  .player-card.dead { background:var(--red); border-color:var(--red); }
+  .player-card.winner { background:var(--blue); border-color:var(--blue); box-shadow:0 0 25px var(--blue); }
+  .player-card.name { font-size:14px; letter-spacing:1px; }
+  .player-card.status { position:absolute; bottom:5px; right:8px; font-size:11px; font-weight:900; }
     @keyframes shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-4px)} 75%{transform:translateX(4px)} }
 
-   .scanner { font-size:18px; color:var(--red); margin:15px 0; letter-spacing:3px; }
-   .timer { font-size:45px; color:var(--glitch); font-weight:900; text-shadow:0 0 15px var(--glitch); }
-   .game-over { display:none; font-size:30px; color:var(--red); margin:20px 0; letter-spacing:4px; animation:glitch 1s infinite; }
+  .scanner { font-size:18px; color:var(--red); margin:15px 0; letter-spacing:3px; }
+  .timer { font-size:45px; color:var(--glitch); font-weight:900; text-shadow:0 0 15px var(--glitch); }
+  .game-over { display:none; font-size:30px; color:var(--red); margin:20px 0; letter-spacing:4px; animation:glitch 1s infinite; }
 
-   .red-flash { position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(255,0,64,0.6); pointer-events:none; display:none; z-index:9999; }
+  .red-flash { position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(255,0,64,0.6); pointer-events:none; display:none; z-index:9999; }
+
+    /* SCROLLBAR YA KUTISHA */
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-track { background: #111; }
+    ::-webkit-scrollbar-thumb { background: var(--red); border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: #ff3366; }
 </style>
 </head>
 <body>
 
 <div class="red-flash" id="redFlash"></div>
+<div class="wrapper">
 
 <!-- SCREEN 1: SETUP -->
 <div class="screen setup" id="setupScreen">
@@ -76,6 +85,8 @@
     <div class="game-over" id="gameOverText">GAME OVER</div>
 </div>
 
+</div>
+
 <!-- AUDIO FILES -->
 <audio id="scanSound" src="https://freesound.org/data/previews/270/270404_5123851-lq.mp3" preload="auto"></audio>
 <audio id="alarmSound" src="https://freesound.org/data/previews/456/456588_9498993-lq.mp3" preload="auto"></audio>
@@ -85,8 +96,7 @@
 <script>
     let players = [];
     let currentScanIndex = 0;
-    let eliminationIndex = 0;
-    let gamePhase = 'scan'; // scan, eliminate, ended
+    let gamePhase = 'scan';
     let timerInterval;
 
     const scanSound = document.getElementById('scanSound');
@@ -148,7 +158,7 @@
     }
 
     function startGameProcess(){
-        // PHASE 1: SCAN ALL PLAYERS - kila sek 15
+        // PHASE 1: SCAN ALL PLAYERS
         let scanTimer = setInterval(()=>{
             if(currentScanIndex < players.length){
                 players.forEach(p=> p.scanning = false);
@@ -173,7 +183,7 @@
         runTimer();
     }
 
-    // PHASE 2: AUTO ELIMINATE - kila sek 5 inatoa mtu
+    // PHASE 2: AUTO ELIMINATE
     function startElimination(){
         let elimTimer = setInterval(()=>{
             let alive = players.filter(p=>p.alive);
@@ -191,7 +201,7 @@
                     endGame();
                 }
             }
-        }, 5000); // kila sekunde 5 inatoa mtu
+        }, 5000);
     }
 
     function runTimer(){
